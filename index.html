@@ -227,16 +227,19 @@ svg{display:block;flex-shrink:0;}
 .proj-section-menu{color:var(--text3);padding:4px;border-radius:6px;}
 .proj-section-menu:active{background:var(--surface2);}
 .proj-section-menu svg{width:16px;height:16px;}
-.proj-section-add{padding:10px 12px;background:transparent;border:1.5px dashed var(--border2);border-radius:var(--r);color:var(--text2);font-size:13px;font-weight:500;width:100%;margin:8px 0 16px;transition:var(--trans);font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;}
-.proj-section-add:active{border-color:var(--accent);color:var(--accent);background:var(--accent-s);}
-.proj-section-add svg{width:14px;height:14px;}
+.proj-section-add{padding:7px 10px;background:transparent;border:1px dashed var(--border);border-radius:10px;color:var(--text3);font-size:12px;font-weight:500;max-width:260px;margin:10px auto 16px;transition:var(--trans);font-family:inherit;display:flex;align-items:center;justify-content:center;gap:5px;opacity:0.75;}
+.proj-section-add:active{border-color:var(--accent);color:var(--accent);background:var(--accent-s);opacity:1;}
+.proj-section-add svg{width:12px;height:12px;}
 .proj-section-bar.dragging{opacity:0.4;}
 .proj-section-bar.drag-over-top{box-shadow:0 -2px 0 0 var(--accent);}
 .proj-section-bar.drag-over-bottom{box-shadow:0 2px 0 0 var(--accent);}
 
 .note-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-bottom:8px;transition:var(--trans);border-left:3px solid var(--border2);}
 .note-card:active{background:var(--surface2);transform:scale(0.99);}
-.note-card.pinned{border-left-color:var(--amber);}
+.note-card.pinned,.inbox-card.pinned,.archive-card.pinned{border-left-color:var(--amber);}
+.pin-mark{color:var(--amber);font-size:0.9em;}
+body.kbd-open .bottom-nav{display:none;}
+body.kbd-open .editor-fmt-bar{bottom:calc(var(--kbd,0px) + 6px);}
 .note-title{font-family:var(--display);font-size:16px;font-weight:500;line-height:1.3;margin-bottom:4px;}
 .note-preview{font-size:13px;color:var(--text2);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
 .note-meta{font-size:11px;color:var(--text3);margin-top:6px;display:flex;gap:8px;align-items:center;}
@@ -733,7 +736,7 @@ pl:{
 'home.echoLabel':'ECHO','home.echoMeta':'Napisane {days} dni temu','home.echo.keep':'Zostaw','home.echo.open':'Otwórz','home.echo.archive':'Archiwum',
 'inbox.title':'Inbox','inbox.archive':'Archiwum','inbox.empty.inbox.title':'Pusto w Inboxie','inbox.empty.inbox.desc':'Szybkie notatki lądują tu.','inbox.empty.archive.title':'Archiwum puste','inbox.empty.archive.desc':'Notatki które zarchiwizujesz trafią tutaj.',
 'search.title':'Szukaj','search.placeholder':'Szukaj w projektach, działach, notatkach...','search.empty':'Zacznij wpisywać','search.noResults':'Nic nie znaleziono',
-'project.addSection':'+ Dodaj dział','project.empty.title':'Pusty projekt','project.empty.desc':'Dodaj pierwszy dział i pierwszą notatkę.','project.defaultSection':'Notatki',
+'project.addSection':'Dodaj dział','project.empty.title':'Pusty projekt','project.empty.desc':'Dodaj pierwszy dział i pierwszą notatkę.','project.defaultSection':'Notatki',
 'note.untitled':'Bez tytułu','note.empty':'Pusta notatka',
 'exit.title':'Zapisać notatkę?','exit.sub':'Gdzie ma się zapisać ta myśl?','exit.keepInbox':'Zostaw w Inboxie','exit.saveToProject':'Zapisz do projektu',
 'settings.appearance':'Wygląd','settings.theme':'Motyw','settings.language':'Język','settings.echo':'Echo — powroty do notatek','settings.echoHint':'Pokazuj stare notatki do ponownego rozważenia','settings.data':'Dane','settings.export':'Eksportuj dane','settings.exportHint':'Kopia zapasowa JSON','settings.import':'Importuj dane','settings.importHint':'Zastąpi aktualne dane','settings.stats':'Statystyki','settings.projects':'Projekty','settings.sections':'Działy','settings.notes':'Notatki','settings.words':'Słowa','settings.danger':'Strefa niebezpieczna','settings.reset':'Wyczyść wszystko','settings.resetHint':'Usuwa wszystko.',
@@ -769,7 +772,7 @@ en:{
 'home.echoLabel':'ECHO','home.echoMeta':'Written {days} days ago','home.echo.keep':'Keep','home.echo.open':'Open','home.echo.archive':'Archive',
 'inbox.title':'Inbox','inbox.archive':'Archive','inbox.empty.inbox.title':'Inbox is empty','inbox.empty.inbox.desc':'Quick notes land here.','inbox.empty.archive.title':'Archive empty','inbox.empty.archive.desc':'Notes you archive will show here.',
 'search.title':'Search','search.placeholder':'Search projects, sections, notes...','search.empty':'Start typing','search.noResults':'Nothing found',
-'project.addSection':'+ Add section','project.empty.title':'Empty project','project.empty.desc':'Add your first section and first note.','project.defaultSection':'Notes',
+'project.addSection':'Add section','project.empty.title':'Empty project','project.empty.desc':'Add your first section and first note.','project.defaultSection':'Notes',
 'note.untitled':'Untitled','note.empty':'Empty note',
 'exit.title':'Save this note?','exit.sub':'Where should this thought go?','exit.keepInbox':'Keep in Inbox','exit.saveToProject':'Save to project',
 'settings.appearance':'Appearance','settings.theme':'Theme','settings.language':'Language','settings.echo':'Echo — revisit old notes','settings.echoHint':'Surface old notes for reconsideration','settings.data':'Data','settings.export':'Export data','settings.exportHint':'JSON backup','settings.import':'Import data','settings.importHint':'Will replace current data','settings.stats':'Stats','settings.projects':'Projects','settings.sections':'Sections','settings.notes':'Notes','settings.words':'Words','settings.danger':'Danger zone','settings.reset':'Wipe everything','settings.resetHint':'Removes everything.',
@@ -1377,7 +1380,7 @@ function headerRightAction(){
   else if(state.nav.view==='editor'){
     const origin=state.nav.noteOrigin;
     openSheet('', actionList([
-      {icon:SVG.star, label:t('sheet.pinToggle'), on:togglePinNote, hide:origin==='inbox'||origin==='archive'},
+      {icon:SVG.star, label:t('sheet.pinToggle'), on:togglePinNote},
       {icon:SVG.copy, label:t('sheet.duplicate'), on:duplicateCurrentNote, hide:origin==='inbox'||origin==='archive'},
       {icon:SVG.fileText, label:t('sheet.copyText'), on:copyNoteText},
       {icon:SVG.move, label: origin==='inbox' ? t('sheet.move') : (origin==='archive' ? t('sheet.unarchive') : t('sheet.moveToInbox')), on: origin==='inbox'?moveInboxToProject : (origin==='archive'?restoreArchivedNote : moveCurrentNoteToInbox)},
@@ -1442,11 +1445,7 @@ function renderHome(){
     }
   }
 
-  // Quick note hero
-  const quick=document.createElement('button');
-  quick.className='quick-hero'; quick.onclick=quickNote;
-  quick.innerHTML=`<div class="quick-hero-icon">${SVG.plus}</div><div class="quick-hero-info"><div class="quick-hero-title">${esc(t('home.quickTitle'))}</div><div class="quick-hero-sub">${esc(t('home.quickSub'))}</div></div>${state.db.inbox.length>0?`<div class="quick-hero-count">${state.db.inbox.length}</div>`:''}`;
-  c.appendChild(quick);
+  // Szybka-hero usunięta — szybka notatka przez FAB.
 
   const rootProjects = state.db.projects.filter(p=>!p.folderId);
   const folders = state.db.folders;
@@ -1773,13 +1772,17 @@ function renderInbox(){
     c.insertAdjacentHTML('beforeend', `<div class="empty-state"><div class="icon">${key==='archive'?'📦':'📥'}</div><h3>${esc(t('inbox.empty.'+key+'.title'))}</h3><p>${esc(t('inbox.empty.'+key+'.desc'))}</p></div>`);
     return;
   }
-  const sorted=[...list].sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
+  const sorted=[...list].sort((a,b)=>{
+    if(!!b.pinned !== !!a.pinned) return (b.pinned?1:0)-(a.pinned?1:0);
+    return (b.updatedAt||0)-(a.updatedAt||0);
+  });
   sorted.forEach(n=>{
     const card=document.createElement('div');
-    card.className=cardClass;
+    card.className=cardClass+(n.pinned?' pinned':'');
     const title=(n.title||'').trim()||t('note.untitled');
     const preview=(n.blocks||[]).map(b=>plainText(b.content||'')).join(' ').slice(0,200);
-    card.innerHTML=`<div class="note-title">${esc(title)}</div>${preview?`<div class="note-preview">${esc(preview)}</div>`:`<div class="note-preview" style="font-style:italic;opacity:0.6">${esc(t('note.empty'))}</div>`}<div class="note-meta">${fmtDate(n.updatedAt)}</div>`;
+    const pinMark = n.pinned ? '<span class="pin-mark">★</span> ' : '';
+    card.innerHTML=`<div class="note-title">${pinMark}${esc(title)}</div>${preview?`<div class="note-preview">${esc(preview)}</div>`:`<div class="note-preview" style="font-style:italic;opacity:0.6">${esc(t('note.empty'))}</div>`}<div class="note-meta">${fmtDate(n.updatedAt)}</div>`;
     card.onclick=()=>openNote(n.id, origin);
     c.appendChild(card);
   });
@@ -2155,6 +2158,11 @@ function togglePinNote(){
   const p=getProject(); if(p) p.updatedAt=Date.now();
   saveDb();
   toast(n.pinned?t('toast.pinned'):t('toast.unpinned'));
+  // Re-render header / editor / any list showing this note
+  if(state.nav.view==='editor'){
+    const star=document.getElementById('edStar'); if(star) star.classList.toggle('on', !!n.pinned);
+  }
+  if(state.nav.view==='project'||state.nav.view==='inbox'||state.nav.view==='folder'||state.nav.view==='home') renderCurrentView();
 }
 function duplicateCurrentNote(){
   closeSheet();
@@ -2322,7 +2330,6 @@ function makeBlock(block, idx, note){
       if(act==='up' && idx>0){ [note.blocks[idx-1],note.blocks[idx]]=[note.blocks[idx],note.blocks[idx-1]]; note.updatedAt=Date.now(); saveDb(); renderEditor(); }
       else if(act==='down' && idx<note.blocks.length-1){ [note.blocks[idx+1],note.blocks[idx]]=[note.blocks[idx],note.blocks[idx+1]]; note.updatedAt=Date.now(); saveDb(); renderEditor(); }
       else if(act==='del'){
-        if(note.blocks.length===1){ toast(t('toast.lastBlock')); return; }
         if(confirm(t('confirm.delBlock'))){ note.blocks.splice(idx,1); note.updatedAt=Date.now(); saveDb(); renderEditor(); }
       }
     };
