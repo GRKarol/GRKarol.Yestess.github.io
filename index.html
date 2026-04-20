@@ -260,7 +260,9 @@ body.kbd-open .editor-fmt-bar{bottom:calc(var(--kbd,0px) + 6px);}
 .block{position:relative;padding:10px 12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:8px;border-left-width:3px;transition:border-color 0.15s;}
 .block.focused{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-s);}
 .block.custom-colored{border-left-width:3px;}
-.block-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;min-height:22px;}
+.block-head{display:flex;align-items:center;gap:6px;margin-bottom:4px;min-height:22px;}
+.block-head .block-type-badge{flex:1;}
+.block-head .drag-handle{margin-right:0;}
 .block-type-badge{font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text2);}
 .block-actions{display:flex;gap:2px;}
 .block-act-btn{width:28px;height:28px;border-radius:8px;color:var(--text3);display:flex;align-items:center;justify-content:center;background:none;border:none;font-family:inherit;}
@@ -612,13 +614,15 @@ mark.find-hit.cur{outline:2px solid var(--accent);}
   </main>
 
   <div class="fmt-bar" id="fmtBar">
-    <button class="fmt-btn bold" data-cmd="bold">B</button>
-    <button class="fmt-btn italic" data-cmd="italic">I</button>
-    <button class="fmt-btn underline" data-cmd="underline">U</button>
-    <button class="fmt-btn" data-cmd="insertUnorderedList">•</button>
-    <button class="fmt-btn" data-cmd="insertOrderedList">1.</button>
-    <button class="fmt-btn" data-cmd="voice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></button>
-    <button class="fmt-btn" data-cmd="dismiss"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+    <button class="fmt-btn bold" data-cmd="bold" title="Pogrubienie">B</button>
+    <button class="fmt-btn italic" data-cmd="italic" title="Kursywa">I</button>
+    <button class="fmt-btn underline" data-cmd="underline" title="Podkreślenie">U</button>
+    <button class="fmt-btn" data-cmd="strikeThrough" title="Przekreślenie" style="text-decoration:line-through">S</button>
+    <button class="fmt-btn" data-cmd="insertUnorderedList" title="Lista punktowana">•</button>
+    <button class="fmt-btn" data-cmd="insertOrderedList" title="Lista numerowana">1.</button>
+    <button class="fmt-btn" data-cmd="find" title="Znajdź i zamień"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
+    <button class="fmt-btn" data-cmd="voice" title="Dyktuj"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></button>
+    <button class="fmt-btn" data-cmd="dismiss" title="Schowaj klawiaturę"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="14" rx="2"/><polyline points="8 11 9 11 9 11"/><polyline points="13 11 14 11 14 11"/><polyline points="7 16 17 16"/><polyline points="12 2 12 5"/></svg></button>
   </div>
 
   <button class="fab" id="fab" onclick="fabAction()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
@@ -2290,6 +2294,7 @@ function makeBlock(block, idx, note){
 
   wrap.innerHTML=`
     <div class="block-head">
+      <button class="drag-handle" data-drag title="Przeciągnij"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg></button>
       <div class="block-type-badge" style="color:${badgeColor}">${esc(badgeText)}</div>
       <div class="block-actions">
         <button class="block-act-btn" data-act="up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg></button>
@@ -2334,7 +2339,69 @@ function makeBlock(block, idx, note){
       }
     };
   });
+  attachBlockDrag(wrap, block, note);
   return wrap;
+}
+
+/* Touch-friendly drag-drop for blocks */
+function attachBlockDrag(wrap, block, note){
+  const handle = wrap.querySelector('[data-drag]');
+  if(!handle) return;
+  let startY=0, dragging=false, ghost=null, targetIdx=-1;
+  const onDown = (e)=>{
+    const pt = e.touches?e.touches[0]:e;
+    startY=pt.clientY; dragging=true;
+    wrap.classList.add('dragging');
+    ghost = wrap.cloneNode(true);
+    ghost.style.position='fixed'; ghost.style.left=wrap.getBoundingClientRect().left+'px';
+    ghost.style.top=wrap.getBoundingClientRect().top+'px';
+    ghost.style.width=wrap.offsetWidth+'px'; ghost.style.pointerEvents='none';
+    ghost.style.opacity='0.7'; ghost.style.zIndex='200';
+    ghost.style.boxShadow='var(--shadow-l)';
+    document.body.appendChild(ghost);
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('touchmove', onMove, {passive:false});
+    document.addEventListener('mouseup', onUp);
+    document.addEventListener('touchend', onUp);
+    if(e.preventDefault) e.preventDefault();
+  };
+  const onMove = (e)=>{
+    if(!dragging) return;
+    const pt = e.touches?e.touches[0]:e;
+    ghost.style.top = (pt.clientY - wrap.offsetHeight/2) + 'px';
+    // Find target block under pointer
+    const cont = document.getElementById('blocksContainer'); if(!cont) return;
+    const all = [...cont.querySelectorAll('.block')];
+    all.forEach(b=>b.classList.remove('drag-over'));
+    let best=null, bestDist=Infinity, bestIdx=-1;
+    all.forEach((b,i)=>{
+      if(b===wrap) return;
+      const r=b.getBoundingClientRect(); const mid=r.top+r.height/2;
+      const d=Math.abs(pt.clientY-mid);
+      if(d<bestDist){ bestDist=d; best=b; bestIdx=i; }
+    });
+    if(best){ best.classList.add('drag-over'); targetIdx=bestIdx; }
+    if(e.preventDefault) try{e.preventDefault();}catch(_){}
+  };
+  const onUp = ()=>{
+    if(!dragging) return;
+    dragging=false; wrap.classList.remove('dragging');
+    document.querySelectorAll('.block.drag-over').forEach(b=>b.classList.remove('drag-over'));
+    if(ghost){ ghost.remove(); ghost=null; }
+    document.removeEventListener('mousemove', onMove);
+    document.removeEventListener('touchmove', onMove);
+    document.removeEventListener('mouseup', onUp);
+    document.removeEventListener('touchend', onUp);
+    if(targetIdx>=0 && targetIdx!==note.blocks.indexOf(block)){
+      const fromIdx=note.blocks.indexOf(block);
+      const [moved]=note.blocks.splice(fromIdx,1);
+      note.blocks.splice(targetIdx,0,moved);
+      note.updatedAt=Date.now(); saveDb(); renderEditor();
+    }
+    targetIdx=-1;
+  };
+  handle.addEventListener('mousedown', onDown);
+  handle.addEventListener('touchstart', onDown, {passive:false});
 }
 
 function renderCheckBlock(raw){
@@ -2408,31 +2475,60 @@ function attachContentEditable(ce, block, note){
 
 /* ═══ FORMATTING BAR ═══ */
 let activeCE=null;
+let savedRange=null;
 function showFmtBar(ce){
   activeCE=ce;
   const bar=document.getElementById('fmtBar');
   const kind=ce.closest('.block')?.dataset.kind;
-  if(kind==='code'||kind==='check'){ bar.classList.remove('show'); return; }
+  if(kind==='code'||kind==='check'||kind==='markdown'){ bar.classList.remove('show'); return; }
   bar.classList.add('show');
 }
-function hideFmtBar(){ document.getElementById('fmtBar').classList.remove('show'); activeCE=null; }
+function hideFmtBar(){ document.getElementById('fmtBar').classList.remove('show'); activeCE=null; savedRange=null; }
 
-document.addEventListener('mousedown', e=>{
+function saveSelection(){
+  try{
+    const sel = window.getSelection();
+    if(sel && sel.rangeCount>0 && activeCE && activeCE.contains(sel.anchorNode)){
+      savedRange = sel.getRangeAt(0).cloneRange();
+    }
+  }catch(e){}
+}
+function restoreSelection(){
+  if(!savedRange || !activeCE) return;
+  try{
+    activeCE.focus();
+    const sel=window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(savedRange);
+  }catch(e){}
+}
+
+// Save selection continuously while editing
+document.addEventListener('selectionchange', ()=>{ if(activeCE) saveSelection(); });
+
+// Prevent default on fmt-btn press so caret stays in contenteditable
+document.addEventListener('pointerdown', e=>{
   const btn=e.target.closest('.fmt-btn');
   if(!btn) return;
+  saveSelection();
   e.preventDefault();
 });
+document.addEventListener('mousedown', e=>{
+  if(e.target.closest('.fmt-btn')){ saveSelection(); e.preventDefault(); }
+});
 document.addEventListener('touchstart', e=>{
-  const btn=e.target.closest('.fmt-btn');
-  if(btn) e.preventDefault();
+  if(e.target.closest('.fmt-btn')){ saveSelection(); e.preventDefault(); }
 }, {passive:false});
 document.addEventListener('click', e=>{
   const btn=e.target.closest('.fmt-btn');
   if(!btn||!activeCE) return;
   const cmd=btn.dataset.cmd;
-  if(cmd==='dismiss'){ activeCE.blur(); return; }
-  if(cmd==='voice'){ startDictationInline(activeCE); return; }
-  try{ document.execCommand(cmd,false,null); activeCE.focus(); }catch(e){}
+  if(cmd==='dismiss'){ activeCE.blur(); hideFmtBar(); return; }
+  if(cmd==='voice'){ restoreSelection(); startDictationInline(activeCE); return; }
+  if(cmd==='find'){ openFind(); return; }
+  restoreSelection();
+  try{ document.execCommand(cmd,false,null); }catch(e){}
+  saveSelection();
 });
 
 /* ═══ IMAGE PICK ═══ */
@@ -2589,6 +2685,127 @@ function startDictation(blockId){
   try{ sr.start(); }catch(e){ toast(t('toast.voiceErr')); }
 }
 function stopDictation(){ if(state.voice){ try{state.voice.stop();}catch(e){} } }
+
+/* ═══ FIND / REPLACE ═══ */
+let findCtx = {q:'', idx:-1, matches:[]};
+function openFind(){
+  const bar=document.getElementById('findBar');
+  bar.classList.add('open');
+  const inp=document.getElementById('findInput');
+  inp.value=''; document.getElementById('replaceInput').value='';
+  findCtx={q:'', idx:-1, matches:[]};
+  updateFindCount();
+  setTimeout(()=>inp.focus(), 50);
+}
+function closeFind(){
+  document.getElementById('findBar').classList.remove('open');
+  clearFindHighlights();
+  findCtx={q:'', idx:-1, matches:[]};
+}
+function clearFindHighlights(){
+  const note=getNote(); if(!note) return;
+  // Re-render to clear highlight marks
+  document.querySelectorAll('mark.find-hit').forEach(m=>{
+    const txt=document.createTextNode(m.textContent);
+    m.replaceWith(txt);
+  });
+}
+function doFindRun(q){
+  clearFindHighlights();
+  findCtx.q=q; findCtx.matches=[]; findCtx.idx=-1;
+  if(!q){ updateFindCount(); return; }
+  const note=getNote(); if(!note){ updateFindCount(); return; }
+  const scope = document.querySelectorAll('#blocksContainer .block-content, #blocksContainer textarea, #edTitle');
+  const re = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'gi');
+  scope.forEach(el=>{
+    if(el.tagName==='TEXTAREA' || el.tagName==='INPUT'){
+      // highlight count only — textarea can't hold <mark>
+      const m = el.value.match(re);
+      if(m) findCtx.matches.push(...m.map(()=>({el, type:'field'})));
+    } else {
+      // walk text nodes
+      const walker=document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+      const nodes=[]; let n; while((n=walker.nextNode())) nodes.push(n);
+      nodes.forEach(tn=>{
+        if(!tn.nodeValue) return;
+        const parts = tn.nodeValue.split(re);
+        const hits  = tn.nodeValue.match(re);
+        if(!hits) return;
+        const frag=document.createDocumentFragment();
+        parts.forEach((part,i)=>{
+          frag.appendChild(document.createTextNode(part));
+          if(i<parts.length-1){
+            const mk=document.createElement('mark'); mk.className='find-hit'; mk.textContent=hits[i];
+            frag.appendChild(mk);
+            findCtx.matches.push({el:mk, type:'mark'});
+          }
+        });
+        tn.replaceWith(frag);
+      });
+    }
+  });
+  if(findCtx.matches.length){ findCtx.idx=0; markCurrent(); }
+  updateFindCount();
+}
+function markCurrent(){
+  findCtx.matches.forEach((m,i)=>{ if(m.type==='mark') m.el.classList.toggle('cur', i===findCtx.idx); });
+  const cur = findCtx.matches[findCtx.idx];
+  if(cur && cur.el && cur.el.scrollIntoView){ try{ cur.el.scrollIntoView({block:'center', behavior:'smooth'}); }catch(e){} }
+}
+function updateFindCount(){
+  document.getElementById('findCount').textContent = `${findCtx.matches.length?findCtx.idx+1:0}/${findCtx.matches.length}`;
+}
+function nextFind(dir){
+  if(!findCtx.matches.length) return;
+  findCtx.idx = (findCtx.idx + dir + findCtx.matches.length) % findCtx.matches.length;
+  markCurrent(); updateFindCount();
+}
+function replaceOneFind(){
+  const cur = findCtx.matches[findCtx.idx];
+  if(!cur) return;
+  const rep = document.getElementById('replaceInput').value;
+  if(cur.type==='mark'){
+    cur.el.replaceWith(document.createTextNode(rep));
+    commitFindChangesToDb();
+  } else if(cur.type==='field'){
+    cur.el.value = cur.el.value.replace(new RegExp(findCtx.q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'i'), rep);
+    cur.el.dispatchEvent(new Event('input', {bubbles:true}));
+  }
+  doFindRun(findCtx.q);
+}
+function replaceAllFind(){
+  if(!findCtx.q) return;
+  const rep = document.getElementById('replaceInput').value;
+  const re = new RegExp(findCtx.q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi');
+  const note = getNote(); if(!note) return;
+  note.blocks.forEach(b=>{ if(typeof b.content==='string') b.content=b.content.replace(re, rep); });
+  note.title = (note.title||'').replace(re, rep);
+  note.updatedAt = Date.now(); saveDb();
+  renderEditor();
+  setTimeout(()=>doFindRun(findCtx.q), 60);
+  toast(t('toast.saved'));
+}
+function commitFindChangesToDb(){
+  const note=getNote(); if(!note) return;
+  // Re-read current content from DOM into blocks
+  const blocks = document.querySelectorAll('#blocksContainer .block');
+  blocks.forEach(bl=>{
+    const id=bl.dataset.id; const b=note.blocks.find(x=>x.id===id); if(!b) return;
+    const ce = bl.querySelector('.block-content');
+    if(ce) b.content = ce.innerHTML;
+  });
+  note.updatedAt=Date.now(); saveDb();
+}
+
+document.addEventListener('input', e=>{
+  if(e.target.id==='findInput') doFindRun(e.target.value);
+});
+document.addEventListener('click', e=>{
+  if(e.target.id==='findNext'){ nextFind(1); }
+  else if(e.target.id==='findPrev'){ nextFind(-1); }
+  else if(e.target.id==='replaceOne'){ replaceOneFind(); }
+  else if(e.target.id==='replaceAll'){ replaceAllFind(); }
+});
 
 function startDictationInline(ce){
   const sr=getSR(); if(!sr){ toast(t('toast.voiceErr')); return; }
