@@ -445,6 +445,10 @@ mark.find-hit.cur{outline:2px solid var(--accent);}
 .code-block-output iframe{width:100%;border:none;display:block;background:white;}
 .code-block-output pre{margin:0;padding:10px;font-family:var(--mono);font-size:12px;color:#222;background:#fafafa;white-space:pre-wrap;word-break:break-all;max-height:200px;overflow-y:auto;}
 
+/* === Dictation block === */
+.dictation-block .block-content{min-height:60px;padding:6px 0;}
+.dictation-block .btn-ghost{justify-content:center;}
+
 /* === Drag handle for reorderable items === */
 .drag-handle{width:22px;height:22px;display:flex;align-items:center;justify-content:center;color:var(--text3);cursor:grab;flex-shrink:0;touch-action:none;}
 .drag-handle:active{cursor:grabbing;color:var(--accent);}
@@ -746,13 +750,14 @@ pl:{
 'settings.appearance':'Wygląd','settings.theme':'Motyw','settings.language':'Język','settings.echo':'Echo — powroty do notatek','settings.echoHint':'Pokazuj stare notatki do ponownego rozważenia','settings.data':'Dane','settings.export':'Eksportuj dane','settings.exportHint':'Kopia zapasowa JSON','settings.import':'Importuj dane','settings.importHint':'Zastąpi aktualne dane','settings.stats':'Statystyki','settings.projects':'Projekty','settings.sections':'Działy','settings.notes':'Notatki','settings.words':'Słowa','settings.danger':'Strefa niebezpieczna','settings.reset':'Wyczyść wszystko','settings.resetHint':'Usuwa wszystko.',
 'sheet.newProject':'Nowy projekt','sheet.newFolder':'Nowy folder','sheet.newSection':'Nowy dział','sheet.editSection':'Edytuj dział','sheet.rename':'Zmień nazwę','sheet.move':'Przenieś','sheet.copy':'Kopiuj','sheet.duplicate':'Duplikuj','sheet.export':'Eksportuj','sheet.delete':'Usuń','sheet.editProject':'Edytuj projekt','sheet.pinToggle':'Przypnij / odepnij','sheet.moveToInbox':'Przenieś do Inboxu','sheet.archive':'Archiwizuj','sheet.unarchive':'Przywróć','sheet.copyText':'Skopiuj tekst','sheet.customBlocks':'Własne typy bloków',
 'sheet.pickProject':'Do którego projektu?','sheet.pickSection':'Do którego działu?','sheet.moveUp':'W górę','sheet.moveDown':'W dół',
-'block.text':'Tekst','block.heading':'Nagłówek','block.quote':'Cytat','block.code':'Kod','block.image':'Obraz','block.audio':'Audio','block.drawing':'Rysunek','block.check':'Zadania','block.callout':'Wyróżnienie','block.more':'Więcej','block.custom':'Własny',
+'block.text':'Tekst','block.heading':'Nagłówek','block.quote':'Cytat','block.code':'Kod','block.image':'Obraz','block.audio':'Audio','block.drawing':'Rysunek','block.check':'Zadania','block.callout':'Wyróżnienie','block.markdown':'Markdown','block.dictation':'Dyktowanie','block.more':'Więcej','block.custom':'Własny',
+'block.markdown.preview':'Podgląd','block.markdown.edit':'Edytuj','block.code.run':'Uruchom','block.code.notRunnable':'Ten język nie działa w przeglądarce. Używaj HTML / JS / CSS aby uruchamiać kod.','block.dictation.start':'Zacznij dyktować','block.dictation.stop':'Zatrzymaj',
 'customBlocks.title':'Własne typy bloków','customBlocks.desc':'Stwórz własne typy z nazwą i kolorem. Dostępne tylko w tym projekcie.','customBlocks.name':'Nazwa','customBlocks.color':'Kolor','customBlocks.add':'Dodaj typ','customBlocks.empty':'Brak własnych typów',
 'toast.saved':'Zapisano','toast.copied':'Skopiowano','toast.moved':'Przeniesiono','toast.deleted':'Usunięto','toast.created':'Utworzono','toast.exported':'Plik zapisany','toast.imported':'Dane przywrócone','toast.archived':'Zarchiwizowano','toast.restored':'Przywrócono','toast.pinned':'Przypięto','toast.unpinned':'Odpięto','toast.voiceStart':'Mów...','toast.voiceEnd':'Koniec dyktowania','toast.voiceErr':'Dyktowanie nieobsługiwane','toast.audioErr':'Brak dostępu do mikrofonu','toast.lastBlock':'Notatka musi mieć przynajmniej 1 blok','toast.needProject':'Najpierw stwórz projekt','toast.storageFull':'Pamięć pełna — zrób eksport',
 'confirm.delProject':'Usunąć projekt razem ze wszystkim w środku?','confirm.delFolder':'Usunąć folder? Projekty zostaną na głównej liście.','confirm.delSection':'Usunąć dział? Notatki przejdą do pierwszego działu.','confirm.delNote':'Usunąć notatkę?','confirm.delBlock':'Usunąć ten blok?','confirm.reset':'Naprawdę usunąć WSZYSTKO?','confirm.reset2':'Ostatnia szansa. Na pewno?','confirm.import':'Zaimportować? Obecne dane zostaną zastąpione.','confirm.clearInbox':'Wyczyścić cały Inbox?','confirm.clearArchive':'Wyczyścić całe Archiwum?',
 'label.chapters':'Rozdziały','label.acts':'Akty','label.parts':'Części','label.sections':'Sekcje','label.entries':'Wpisy',
 'meta.notes':'notatek','meta.sections':'działów','meta.words':'słów','meta.daysAgo':'d temu','meta.yesterday':'wczoraj',
-'ph.projectName':'np. Moja książka','ph.projectDesc':'O czym to jest?','ph.sectionName':'np. Akt I','ph.noteTitle':'Tytuł notatki','ph.customLabel':'np. Rozdziały','ph.folderName':'Nazwa folderu','ph.blockText':'Napisz coś...','ph.editorTitle':'Tytuł notatki...','ph.customBlockName':'np. Pomysł, Cel...'
+'ph.projectName':'np. Moja książka','ph.projectDesc':'O czym to jest?','ph.sectionName':'np. Akt I','ph.noteTitle':'Tytuł notatki','ph.customLabel':'np. Rozdziały','ph.folderName':'Nazwa folderu','ph.blockText':'Napisz coś...','ph.editorTitle':'Tytuł notatki...','ph.customBlockName':'np. Pomysł, Cel...','ph.markdown':'# Nagłówek\n**pogrubienie** *kursywa* `kod`\n- punkt 1\n- punkt 2','ph.code':'// Twój kod...','ph.dictation':'Mów, a tekst pojawi się tutaj...','ph.find':'Szukaj w notatce...','ph.replace':'Zastąp...','ph.echoLabel':'Etykieta echa','ph.password':'Hasło'
 },
 en:{
 'common.next':'Next','common.back':'Back','common.save':'Save','common.cancel':'Cancel','common.delete':'Delete','common.ok':'OK','common.create':'Create','common.add':'Add','common.close':'Close','common.yes':'Yes','common.no':'No','common.keep':'Keep','common.move':'Move',
@@ -782,13 +787,14 @@ en:{
 'settings.appearance':'Appearance','settings.theme':'Theme','settings.language':'Language','settings.echo':'Echo — revisit old notes','settings.echoHint':'Surface old notes for reconsideration','settings.data':'Data','settings.export':'Export data','settings.exportHint':'JSON backup','settings.import':'Import data','settings.importHint':'Will replace current data','settings.stats':'Stats','settings.projects':'Projects','settings.sections':'Sections','settings.notes':'Notes','settings.words':'Words','settings.danger':'Danger zone','settings.reset':'Wipe everything','settings.resetHint':'Removes everything.',
 'sheet.newProject':'New project','sheet.newFolder':'New folder','sheet.newSection':'New section','sheet.editSection':'Edit section','sheet.rename':'Rename','sheet.move':'Move','sheet.copy':'Copy','sheet.duplicate':'Duplicate','sheet.export':'Export','sheet.delete':'Delete','sheet.editProject':'Edit project','sheet.pinToggle':'Pin / unpin','sheet.moveToInbox':'Move to Inbox','sheet.archive':'Archive','sheet.unarchive':'Restore','sheet.copyText':'Copy text','sheet.customBlocks':'Custom block types',
 'sheet.pickProject':'Which project?','sheet.pickSection':'Which section?','sheet.moveUp':'Move up','sheet.moveDown':'Move down',
-'block.text':'Text','block.heading':'Heading','block.quote':'Quote','block.code':'Code','block.image':'Image','block.audio':'Audio','block.drawing':'Drawing','block.check':'Tasks','block.callout':'Callout','block.more':'More','block.custom':'Custom',
+'block.text':'Text','block.heading':'Heading','block.quote':'Quote','block.code':'Code','block.image':'Image','block.audio':'Audio','block.drawing':'Drawing','block.check':'Tasks','block.callout':'Callout','block.markdown':'Markdown','block.dictation':'Dictation','block.more':'More','block.custom':'Custom',
+'block.markdown.preview':'Preview','block.markdown.edit':'Edit','block.code.run':'Run','block.code.notRunnable':'This language does not run in the browser. Use HTML / JS / CSS.','block.dictation.start':'Start dictating','block.dictation.stop':'Stop',
 'customBlocks.title':'Custom block types','customBlocks.desc':'Create your own types with name and color. Available only in this project.','customBlocks.name':'Name','customBlocks.color':'Color','customBlocks.add':'Add type','customBlocks.empty':'No custom types',
 'toast.saved':'Saved','toast.copied':'Copied','toast.moved':'Moved','toast.deleted':'Deleted','toast.created':'Created','toast.exported':'File saved','toast.imported':'Data restored','toast.archived':'Archived','toast.restored':'Restored','toast.pinned':'Pinned','toast.unpinned':'Unpinned','toast.voiceStart':'Speak...','toast.voiceEnd':'Done','toast.voiceErr':'Dictation not supported','toast.audioErr':'No microphone access','toast.lastBlock':'Note must have at least 1 block','toast.needProject':'Create a project first','toast.storageFull':'Storage full — export data',
 'confirm.delProject':'Delete project with everything inside?','confirm.delFolder':'Delete folder? Projects move to main list.','confirm.delSection':'Delete section? Notes move to the first section.','confirm.delNote':'Delete note?','confirm.delBlock':'Delete this block?','confirm.reset':'Really delete EVERYTHING?','confirm.reset2':'Last chance. Sure?','confirm.import':'Import? Current data will be replaced.','confirm.clearInbox':'Clear entire Inbox?','confirm.clearArchive':'Clear entire Archive?',
 'label.chapters':'Chapters','label.acts':'Acts','label.parts':'Parts','label.sections':'Sections','label.entries':'Entries',
 'meta.notes':'notes','meta.sections':'sections','meta.words':'words','meta.daysAgo':'d ago','meta.yesterday':'yesterday',
-'ph.projectName':'e.g. My book','ph.projectDesc':'What is this about?','ph.sectionName':'e.g. Act I','ph.noteTitle':'Note title','ph.customLabel':'e.g. Chapters','ph.folderName':'Folder name','ph.blockText':'Write something...','ph.editorTitle':'Note title...','ph.customBlockName':'e.g. Idea, Goal...'
+'ph.projectName':'e.g. My book','ph.projectDesc':'What is this about?','ph.sectionName':'e.g. Act I','ph.noteTitle':'Note title','ph.customLabel':'e.g. Chapters','ph.folderName':'Folder name','ph.blockText':'Write something...','ph.editorTitle':'Note title...','ph.customBlockName':'e.g. Idea, Goal...','ph.markdown':'# Heading\n**bold** *italic* `code`\n- item 1\n- item 2','ph.code':'// Your code...','ph.dictation':'Speak and your words will appear here...','ph.find':'Find in note...','ph.replace':'Replace with...','ph.echoLabel':'Echo label','ph.password':'Password'
 }
 };
 function t(k, vars){
@@ -2206,20 +2212,30 @@ function renderEditor(){
   c.innerHTML='';
   note.blocks.forEach((b,idx)=>c.appendChild(makeBlock(b,idx,note)));
 
-  // Build add-block bar: builtin (short list) + custom block kinds (project-scoped) + "More"
+  // Build add-block bar: ordered by cfg.blockOrder (user-customizable in Settings)
   const bar=document.getElementById('addBlockBar');
   bar.innerHTML='';
-  const shortKinds=[
-    {kind:'text', label:t('block.text'), icon:SVG.pen},
-    {kind:'heading', label:t('block.heading'), icon:SVG.pen},
-    {kind:'check', label:t('block.check'), icon:SVG.check},
-    {kind:'quote', label:t('block.quote'), icon:SVG.quote},
-    {kind:'image', label:t('block.image'), icon:SVG.image},
-    {kind:'audio', label:t('block.audio'), icon:SVG.mic}
-  ];
-  shortKinds.forEach(k=>{
-    const btn=document.createElement('button'); btn.className='add-block-btn'; btn.innerHTML=`${k.icon}<span>${esc(k.label)}</span>`;
-    btn.onclick=()=>addBlock(k.kind, note, null);
+  const allKinds = {
+    text:      {label:t('block.text'),     icon:SVG.pen},
+    heading:   {label:t('block.heading'),  icon:SVG.pen},
+    check:     {label:t('block.check'),    icon:SVG.check},
+    quote:     {label:t('block.quote'),    icon:SVG.quote},
+    callout:   {label:t('block.callout'),  icon:SVG.star},
+    code:      {label:t('block.code'),     icon:SVG.code},
+    markdown:  {label:t('block.markdown'), icon:SVG.pen},
+    dictation: {label:t('block.dictation'),icon:SVG.mic},
+    image:     {label:t('block.image'),    icon:SVG.image},
+    audio:     {label:t('block.audio'),    icon:SVG.mic},
+    drawing:   {label:t('block.drawing'),  icon:SVG.pen}
+  };
+  const order = (state.cfg && state.cfg.blockOrder) || ['text','heading','check','quote','callout','code','markdown','image','audio','drawing','dictation'];
+  const shortCount = 6;
+  const shortList = order.slice(0, shortCount);
+  const moreList  = order.slice(shortCount);
+  shortList.forEach(k=>{
+    const def=allKinds[k]; if(!def) return;
+    const btn=document.createElement('button'); btn.className='add-block-btn'; btn.innerHTML=`${def.icon}<span>${esc(def.label)}</span>`;
+    btn.onclick=()=>addBlock(k, note, null);
     bar.appendChild(btn);
   });
 
@@ -2234,23 +2250,21 @@ function renderEditor(){
     });
   }
 
-  // More button (shows rest of builtins)
-  const moreBtn=document.createElement('button'); moreBtn.className='add-block-btn more';
-  moreBtn.innerHTML=`<span>${esc(t('block.more'))}</span>`;
-  moreBtn.onclick=()=>{
-    const rest=[
-      {kind:'code',label:t('block.code'),icon:SVG.code},
-      {kind:'callout',label:t('block.callout'),icon:SVG.star},
-      {kind:'drawing',label:t('block.drawing'),icon:SVG.pen}
-    ];
-    openSheet(t('block.more'), '<div class="stack">'+rest.map((k,i)=>`<button class="action-row" data-mk="${i}">${k.icon}<span class="action-row-label">${esc(k.label)}</span></button>`).join('')+'</div>');
-    setTimeout(()=>{
-      document.querySelectorAll('.sheet-body [data-mk]').forEach(b=>{
-        b.onclick=()=>{ const k=rest[Number(b.dataset.mk)]; closeSheet(); addBlock(k.kind, note, null); };
-      });
-    }, 100);
-  };
-  bar.appendChild(moreBtn);
+  // More button
+  if(moreList.length){
+    const moreBtn=document.createElement('button'); moreBtn.className='add-block-btn more';
+    moreBtn.innerHTML=`<span>${esc(t('block.more'))}</span>`;
+    moreBtn.onclick=()=>{
+      const rest = moreList.map(k=>({kind:k, ...allKinds[k]})).filter(x=>x.label);
+      openSheet(t('block.more'), '<div class="stack">'+rest.map((k,i)=>`<button class="action-row" data-mk="${i}">${k.icon||''}<span class="action-row-label">${esc(k.label)}</span></button>`).join('')+'</div>');
+      setTimeout(()=>{
+        document.querySelectorAll('.sheet-body [data-mk]').forEach(b=>{
+          b.onclick=()=>{ const k=rest[Number(b.dataset.mk)]; closeSheet(); addBlock(k.kind, note, null); };
+        });
+      }, 100);
+    };
+    bar.appendChild(moreBtn);
+  }
 }
 
 function addBlock(kind, note, customKindId){
@@ -2318,6 +2332,12 @@ function makeBlock(block, idx, note){
       body.innerHTML=`<button class="btn btn-ghost" style="width:100%" data-draw>${SVG.pen}<span>${esc(t('block.drawing'))}</span></button>`;
       body.querySelector('[data-draw]').onclick=()=>openDraw(block.id);
     }
+  } else if(block.kind==='markdown'){
+    body.appendChild(renderMarkdownBlock(block, note));
+  } else if(block.kind==='code'){
+    body.appendChild(renderCodeBlock(block, note));
+  } else if(block.kind==='dictation'){
+    body.appendChild(renderDictationBlock(block, note));
   } else {
     body.innerHTML=`<div class="block-content" contenteditable="true" data-placeholder="${esc(t('ph.blockText'))}"></div>`;
     const ce=body.querySelector('.block-content');
@@ -2412,6 +2432,215 @@ function renderCheckBlock(raw){
     const txt=line.replace(/^\[[x ]\]\s*/i,'');
     return `<div class="todo-line${done?' done':''}"><input type="checkbox"${done?' checked':''}><span contenteditable="true">${esc(txt)}</span></div>`;
   }).join('');
+}
+
+/* ═══ MARKDOWN BLOCK ═══ */
+function mdToHtml(src){
+  if(!src) return '';
+  let s = esc(src);
+  // Code blocks
+  s = s.replace(/```([\w-]*)\n([\s\S]*?)```/g, (m,lang,code)=>`<pre><code class="lang-${esc(lang)}">${code}</code></pre>`);
+  // Inline code
+  s = s.replace(/`([^`\n]+)`/g, '<code>$1</code>');
+  // Headings
+  s = s.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+  s = s.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+  s = s.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+  // Bold / italic
+  s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  s = s.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+  s = s.replace(/__([^_]+)__/g, '<strong>$1</strong>');
+  s = s.replace(/_([^_]+)_/g, '<em>$1</em>');
+  // Links
+  s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+  // Blockquotes
+  s = s.replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>');
+  // Lists
+  s = s.replace(/((?:^[-*] .+(?:\n|$))+)/gm, m => '<ul>'+m.trim().split('\n').map(l=>'<li>'+l.replace(/^[-*] /,'')+'</li>').join('')+'</ul>');
+  s = s.replace(/((?:^\d+\. .+(?:\n|$))+)/gm, m => '<ol>'+m.trim().split('\n').map(l=>'<li>'+l.replace(/^\d+\. /,'')+'</li>').join('')+'</ol>');
+  // HR
+  s = s.replace(/^---$/gm, '<hr>');
+  // Paragraphs (simple)
+  s = s.split(/\n{2,}/).map(p=>{
+    const tr=p.trim();
+    if(!tr) return '';
+    if(/^<(h\d|ul|ol|pre|blockquote|hr|p)/i.test(tr)) return tr;
+    return '<p>'+tr.replace(/\n/g,'<br>')+'</p>';
+  }).join('');
+  return s;
+}
+function renderMarkdownBlock(block, note){
+  const wrap=document.createElement('div');
+  wrap.className='md-block';
+  const ta=document.createElement('textarea');
+  ta.placeholder=t('ph.markdown');
+  ta.value=block.content||'';
+  const preview=document.createElement('div');
+  preview.className='md-preview';
+  const toggle=document.createElement('button');
+  toggle.className='md-toggle';
+  toggle.textContent=t('block.markdown.preview');
+  let showing='edit';
+  const updatePreview = ()=>{ preview.innerHTML = mdToHtml(ta.value); };
+  const refresh = ()=>{
+    if(showing==='edit'){ ta.style.display='block'; preview.style.display='none'; toggle.textContent=t('block.markdown.preview'); }
+    else { updatePreview(); ta.style.display='none'; preview.style.display='block'; toggle.textContent=t('block.markdown.edit'); }
+  };
+  toggle.onclick=()=>{ showing = showing==='edit'?'preview':'edit'; refresh(); };
+  ta.addEventListener('input', ()=>{
+    block.content=ta.value; note.updatedAt=Date.now(); saveDb();
+  });
+  ta.addEventListener('focus', ()=>showFmtBarMeta());
+  ta.addEventListener('blur',  ()=>setTimeout(()=>{ if(!document.activeElement?.closest?.('.md-block')) hideFmtBar(); }, 200));
+  wrap.appendChild(toggle);
+  wrap.appendChild(ta);
+  wrap.appendChild(preview);
+  refresh();
+  return wrap;
+}
+function showFmtBarMeta(){ /* markdown doesn't use execCommand fmt-bar */ }
+
+/* ═══ CODE BLOCK with run (sandboxed iframe for HTML/JS) ═══ */
+function renderCodeBlock(block, note){
+  const wrap=document.createElement('div');
+  wrap.className='code-block-wrap';
+  wrap.dataset.lang = (block.content && block.content.__lang) || '';
+  const parsed = parseCodeContent(block.content||'');
+  const bar=document.createElement('div');
+  bar.className='code-block-bar';
+  bar.innerHTML=`
+    <select class="code-block-lang">
+      <option value="html">HTML</option>
+      <option value="js">JavaScript</option>
+      <option value="css">CSS</option>
+      <option value="cpp">C++</option>
+      <option value="python">Python</option>
+      <option value="java">Java</option>
+      <option value="other">Inny</option>
+    </select>
+    <button class="code-block-run" data-run title="Uruchom">▶ ${esc(t('block.code.run'))}</button>
+  `;
+  const sel=bar.querySelector('.code-block-lang');
+  sel.value = parsed.lang || 'html';
+  const ta=document.createElement('textarea');
+  ta.className='code-block-content';
+  ta.value = parsed.code || '';
+  ta.placeholder=t('ph.code');
+  const output=document.createElement('div');
+  output.className='code-block-output';
+  const commit = ()=>{
+    block.content = JSON.stringify({__codeBlock:1, lang:sel.value, code:ta.value});
+    note.updatedAt=Date.now(); saveDb();
+  };
+  ta.addEventListener('input', commit);
+  sel.addEventListener('change', ()=>{
+    commit();
+    updateRunBtn();
+  });
+  const runBtn = bar.querySelector('[data-run]');
+  const updateRunBtn=()=>{
+    const runnable = ['html','js','css'].includes(sel.value);
+    runBtn.disabled = !runnable;
+    runBtn.title = runnable ? 'Uruchom' : 'Tylko HTML / JS / CSS uruchamia się w przeglądarce';
+  };
+  runBtn.onclick = ()=>{
+    const lang=sel.value, code=ta.value;
+    output.innerHTML='';
+    if(lang==='html'){
+      const iframe=document.createElement('iframe');
+      iframe.setAttribute('sandbox','allow-scripts');
+      iframe.srcdoc = code;
+      output.appendChild(iframe);
+      const h = Math.min(280, Math.max(120, code.split('\n').length * 22));
+      iframe.style.height = h+'px';
+    } else if(lang==='js'){
+      const wrapped = `<!DOCTYPE html><html><head><style>body{font-family:system-ui,sans-serif;padding:10px;margin:0;font-size:13px}pre{white-space:pre-wrap;word-break:break-all;margin:0}</style></head><body><pre id="o"></pre><script>
+        const _o=document.getElementById('o');
+        const _log=(...a)=>{ _o.textContent += a.map(x=>typeof x==='object'?JSON.stringify(x,null,2):String(x)).join(' ')+'\\n'; };
+        const console={log:_log, warn:_log, error:_log, info:_log};
+        try { ${code} } catch(e){ _o.style.color='#b83232'; _o.textContent += 'Error: '+e.message; }
+      </`+`script></body></html>`;
+      const iframe=document.createElement('iframe');
+      iframe.setAttribute('sandbox','allow-scripts');
+      iframe.srcdoc = wrapped;
+      iframe.style.height='200px';
+      output.appendChild(iframe);
+    } else if(lang==='css'){
+      const html = `<!DOCTYPE html><html><head><style>${code}</style></head><body><h1>Nagłówek 1</h1><h2>Nagłówek 2</h2><p>Przykładowy paragraf <a href="#">link</a>.</p><button>Przycisk</button><ul><li>Lista</li><li>Druga</li></ul></body></html>`;
+      const iframe=document.createElement('iframe');
+      iframe.setAttribute('sandbox','allow-scripts');
+      iframe.srcdoc = html;
+      iframe.style.height='240px';
+      output.appendChild(iframe);
+    } else {
+      const pre=document.createElement('pre');
+      pre.textContent = t('block.code.notRunnable');
+      output.appendChild(pre);
+    }
+  };
+  updateRunBtn();
+  wrap.appendChild(bar);
+  wrap.appendChild(ta);
+  wrap.appendChild(output);
+  return wrap;
+}
+function parseCodeContent(raw){
+  if(!raw) return {lang:'html', code:''};
+  try{
+    const obj=JSON.parse(raw);
+    if(obj && obj.__codeBlock) return {lang:obj.lang||'html', code:obj.code||''};
+  }catch(e){}
+  return {lang:'html', code:raw}; // backward compat: old code blocks stored as plain text
+}
+
+/* ═══ DICTATION BLOCK — dedicated block for voice notes ═══ */
+function renderDictationBlock(block, note){
+  const wrap=document.createElement('div');
+  wrap.className='dictation-block';
+  const ce=document.createElement('div');
+  ce.className='block-content';
+  ce.setAttribute('contenteditable','true');
+  ce.setAttribute('data-placeholder', t('ph.dictation'));
+  ce.innerHTML = block.content || '';
+  attachContentEditable(ce, block, note);
+  const btn=document.createElement('button');
+  btn.className='btn btn-ghost';
+  btn.style.width='100%';
+  btn.style.marginTop='6px';
+  btn.innerHTML = `${SVG.mic}<span>${esc(t('block.dictation.start'))}</span>`;
+  let rec=null;
+  btn.onclick=()=>{
+    if(rec){
+      try{ rec.stop(); }catch(e){}
+      rec=null;
+      btn.innerHTML = `${SVG.mic}<span>${esc(t('block.dictation.start'))}</span>`;
+      return;
+    }
+    const sr=getSR(); if(!sr){ toast(t('toast.voiceErr')); return; }
+    sr.lang = state.cfg.lang==='en' ? 'en-US' : 'pl-PL';
+    sr.continuous=true; sr.interimResults=true;
+    let finalText = block.content ? plainText(block.content) : '';
+    sr.onresult = (e)=>{
+      let interim=''; let finalBatch='';
+      for(let i=e.resultIndex; i<e.results.length; i++){
+        const tr = e.results[i][0].transcript;
+        if(e.results[i].isFinal) finalBatch += tr+' '; else interim += tr;
+      }
+      if(finalBatch){ finalText = (finalText?finalText+' ':'') + finalBatch; }
+      ce.innerHTML = esc(finalText) + (interim?`<span style="opacity:0.5">${esc(interim)}</span>`:'');
+      block.content = ce.innerHTML; note.updatedAt=Date.now(); saveDb();
+    };
+    sr.onerror=()=>toast(t('toast.voiceErr'));
+    sr.onend=()=>{
+      rec=null;
+      btn.innerHTML = `${SVG.mic}<span>${esc(t('block.dictation.start'))}</span>`;
+    };
+    try{ sr.start(); rec=sr; btn.innerHTML = `${SVG.mic}<span>${esc(t('block.dictation.stop'))}</span>`; toast(t('toast.voiceStart')); }
+    catch(e){ toast(t('toast.voiceErr')); }
+  };
+  wrap.appendChild(ce);
+  wrap.appendChild(btn);
+  return wrap;
 }
 function serializeCheckBlock(container){
   const lines=[];
