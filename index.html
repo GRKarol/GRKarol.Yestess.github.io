@@ -1590,30 +1590,100 @@ function attachReorderDrag(el, sel, onReorder){
   handle.addEventListener('touchstart', onDown, {passive:false});
 }
 
+function activeEchoRules(){
+  const cfg = (state.cfg && state.cfg.echoes) || {enabled:true, items:[]};
+  if(!cfg.enabled) return [];
+  if(!cfg.items || cfg.items.length===0){
+    return [{id:'_default', label:t('echo.default'), days:14, minWords:30, minOpens:2, enabled:true}];
+  }
+  return cfg.items.filter(r=>r.enabled!==false);
+}
 function findEchoCandidate(){
-  // Criteria: ≥14 days since lastOpenedAt, ≥30 words, openCount≥2 (was actively expanded), not shown in echo in last 24h
+  const rules = activeEchoRules();
+  if(rules.length===0) return null;
   const all=[];
   state.db.projects.forEach(p=>{
-    p.notes.forEach(n => {
-      if (!eligibleForEcho(n)) return;
-      all.push(n);
-    });
+    p.notes.forEach(n => { if (eligibleForAnyRule(n, rules)) all.push(n); });
   });
-  state.db.inbox.forEach(n => { if(eligibleForEcho(n)) all.push(n); });
+  state.db.inbox.forEach(n => { if(eligibleForAnyRule(n, rules)) all.push(n); });
   if(all.length===0) return null;
-  // Pick the one that has been cold the longest
   all.sort((a,b)=> (a.lastOpenedAt||0) - (b.lastOpenedAt||0));
   return all[0];
 }
-function eligibleForEcho(n){
+function eligibleForAnyRule(n, rules){
   if(!n) return false;
-  const last = n.lastOpenedAt || n.updatedAt || n.createdAt;
-  if (daysSince(last) < 14) return false;
-  if ((n.openCount||0) < 2) return false;
-  const words = (n.blocks||[]).reduce((s,b)=>s+wc(b.content||''),0);
-  if (words < 30) return false;
   if (n.echoShownAt && (Date.now()-n.echoShownAt) < 86400000) return false;
-  return true;
+  const last = n.lastOpenedAt || n.updatedAt || n.createdAt;
+  const days = daysSince(last);
+  const opens = n.openCount || 0;
+  const words = (n.blocks||[]).reduce((s,b)=>s+wc(b.content||''),0);
+  return rules.some(r =>
+    days   >= (r.days   ?? 14) &&
+    opens  >= (r.minOpens ?? 2) &&
+    words  >= (r.minWords ?? 30)
+  );
+}
+function eligibleForEcho(n){ return eligibleForAnyRule(n, activeEchoRules()); }
+
+/* ═══ Custom echoes manager ═══ */
+function openEchoManager(){
+  closeSheet();
+  if(!state.cfg.echoes) state.cfg.echoes={enabled:state.cfg.echoEnabled!==false, items:[]};
+  renderEchoManager();
+}
+function renderEchoManager(){
+  const cfg = state.cfg.echoes;
+  const rules = cfg.items||[];
+  const html = `
+    <div style="margin-bottom:10px;color:var(--text2);font-size:13px">${esc(t('echo.manager.desc'))}</div>
+    <div class="toggle-row" style="margin-bottom:12px">
+      <label><input type="checkbox" id="echoMainEnabled" ${cfg.enabled?'checked':''}> <span>${esc(t('echo.enabled'))}</span></label>
+    </div>
+    <div id="echoRules">${
+      rules.length ? rules.map((r,i)=>echoRuleRow(r,i)).join('')
+      : `<div class="echo-row" style="font-style:italic;color:var(--text3)">${esc(t('echo.default'))}</div>`
+    }</div>
+    <button class="btn btn-primary" id="echoAddBtn" style="width:100%;margin-top:10px">${esc(t('echo.add'))}</button>
+  `;
+  openSheet(t('echo.manager.title'), html);
+  setTimeout(()=>{
+    document.getElementById('echoMainEnabled').onchange=(e)=>{
+      cfg.enabled=e.target.checked; state.cfg.echoEnabled=cfg.enabled; saveCfg();
+    };
+    document.getElementById('echoAddBtn').onclick=()=>{
+      cfg.items = cfg.items||[];
+      cfg.items.push({id:uid('er'), label:'Echo '+(cfg.items.length+1), days:14, minWords:30, minOpens:2, enabled:true});
+      saveCfg(); renderEchoManager();
+    };
+    document.querySelectorAll('[data-echo-idx]').forEach(row=>{
+      const i = Number(row.dataset.echoIdx);
+      const rule = cfg.items[i];
+      row.querySelector('[data-k=label]').oninput=(e)=>{ rule.label=e.target.value; saveCfg(); };
+      row.querySelector('[data-k=days]').oninput=(e)=>{ rule.days=Number(e.target.value)||14; saveCfg(); };
+      row.querySelector('[data-k=minWords]').oninput=(e)=>{ rule.minWords=Number(e.target.value)||30; saveCfg(); };
+      row.querySelector('[data-k=minOpens]').oninput=(e)=>{ rule.minOpens=Number(e.target.value)||2; saveCfg(); };
+      row.querySelector('[data-k=enabled]').onchange=(e)=>{ rule.enabled=e.target.checked; saveCfg(); };
+      row.querySelector('[data-del]').onclick=()=>{
+        cfg.items.splice(i,1); saveCfg(); renderEchoManager();
+      };
+    });
+  }, 80);
+}
+function echoRuleRow(r,i){
+  return `
+    <div class="echo-row" data-echo-idx="${i}">
+      <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+        <input type="text" data-k="label" value="${esc(r.label||'')}" placeholder="${esc(t('echo.label'))}">
+        <div style="display:flex;gap:6px">
+          <label style="flex:1;font-size:11px;color:var(--text3)">${esc(t('echo.daysOld'))}<input type="number" data-k="days" value="${r.days??14}" min="1" style="width:100%"></label>
+          <label style="flex:1;font-size:11px;color:var(--text3)">${esc(t('echo.minWords'))}<input type="number" data-k="minWords" value="${r.minWords??30}" min="0" style="width:100%"></label>
+          <label style="flex:1;font-size:11px;color:var(--text3)">${esc(t('echo.minOpens'))}<input type="number" data-k="minOpens" value="${r.minOpens??2}" min="0" style="width:100%"></label>
+        </div>
+      </div>
+      <label style="display:flex;align-items:center"><input type="checkbox" data-k="enabled" ${r.enabled!==false?'checked':''}></label>
+      <button class="btn" data-del style="padding:4px 8px;font-size:11px">✕</button>
+    </div>
+  `;
 }
 function echoArchiveNote(n){
   // remove from wherever it lives
