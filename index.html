@@ -445,6 +445,13 @@ mark.find-hit.cur{outline:2px solid var(--accent);}
 .code-block-output iframe{width:100%;border:none;display:block;background:white;}
 .code-block-output pre{margin:0;padding:10px;font-family:var(--mono);font-size:12px;color:#222;background:#fafafa;white-space:pre-wrap;word-break:break-all;max-height:200px;overflow-y:auto;}
 
+/* === Hidden notebook === */
+.hidden-entry{padding:10px 12px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;background:var(--surface);cursor:pointer;transition:var(--trans);}
+.hidden-entry:active{background:var(--surface2);transform:scale(0.99);}
+.hidden-entry-title{font-weight:600;font-size:14px;margin-bottom:2px;}
+.hidden-entry-preview{font-size:12px;color:var(--text2);line-height:1.4;margin-bottom:4px;}
+.hidden-entry-meta{font-size:11px;color:var(--text3);}
+
 /* === Dictation block === */
 .dictation-block .block-content{min-height:60px;padding:6px 0;}
 .dictation-block .btn-ghost{justify-content:center;}
@@ -1072,6 +1079,211 @@ function setupVisualViewportGuard(){
   };
   vv.addEventListener('resize', apply);
   vv.addEventListener('scroll', apply);
+}
+
+/* ═══ Hidden notebook — long-press on logo 3s ═══ */
+function setupHiddenPull(){
+  const trigger = ()=>document.getElementById('headerTitle');
+  let pressTimer=null, startTime=0, progressTimer=null;
+  const pull = document.getElementById('hiddenPull');
+  const bar  = document.getElementById('hiddenPullBar');
+  const HOLD_MS = 3000;
+  const onStart = (e)=>{
+    // Only react on header title / logo area
+    if(!(e.target && e.target.closest && e.target.closest('.header-center'))) return;
+    startTime = Date.now();
+    pull.classList.add('show');
+    bar.style.width='0%';
+    progressTimer = setInterval(()=>{
+      const pct = Math.min(100, ((Date.now()-startTime)/HOLD_MS)*100);
+      bar.style.width = pct+'%';
+    }, 60);
+    pressTimer = setTimeout(()=>{
+      pull.classList.remove('show');
+      clearInterval(progressTimer);
+      openHiddenNotebook();
+    }, HOLD_MS);
+  };
+  const onEnd = ()=>{
+    if(pressTimer){ clearTimeout(pressTimer); pressTimer=null; }
+    if(progressTimer){ clearInterval(progressTimer); progressTimer=null; }
+    pull.classList.remove('show');
+    bar.style.width='0%';
+  };
+  document.addEventListener('touchstart', onStart, {passive:true});
+  document.addEventListener('touchend',   onEnd,   {passive:true});
+  document.addEventListener('touchcancel',onEnd,   {passive:true});
+  document.addEventListener('mousedown',  onStart);
+  document.addEventListener('mouseup',    onEnd);
+  document.addEventListener('mouseleave', onEnd);
+}
+
+async function openHiddenNotebook(){
+  if(!state.cfg || !state.cfg.hidden || !state.cfg.hidden.enabled){
+    // First time — prompt to enable
+    openHiddenSetup(true);
+    return;
+  }
+  // Ask for password
+  openSheet(t('hidden.title'), `
+    <div style="font-size:13px;color:var(--text2);margin-bottom:10px">${esc(t('hidden.desc'))}</div>
+    <input type="password" class="field-input" id="hidPwd" placeholder="${esc(t('ph.password'))}" autocomplete="off">
+    <button class="btn btn-primary" id="hidUnlockBtn" style="width:100%;margin-top:10px">${esc(t('hidden.unlock'))}</button>
+  `);
+  setTimeout(()=>{
+    const inp=document.getElementById('hidPwd');
+    const go = async()=>{
+      const pwd = inp.value;
+      const ok = await tryUnlockHidden(pwd);
+      if(ok){ closeSheet(); toast(t('toast.hiddenOn')); renderHiddenHome(); }
+      else toast(t('toast.wrongPassword'));
+    };
+    document.getElementById('hidUnlockBtn').onclick = go;
+    inp.addEventListener('keydown', e=>{ if(e.key==='Enter') go(); });
+  }, 80);
+}
+
+function openHiddenSetup(firstTime){
+  const title = firstTime ? t('hidden.enable') : t('hidden.changePassword');
+  openSheet(t('hidden.title'), `
+    <div style="font-size:13px;color:var(--text2);margin-bottom:10px">${esc(t('hidden.desc'))}</div>
+    <input type="password" class="field-input" id="hidPwdNew" placeholder="${esc(t('ph.password'))}" autocomplete="off">
+    <input type="password" class="field-input" id="hidPwdConf" placeholder="${esc(t('ph.password'))+'  (2x)'}" style="margin-top:6px" autocomplete="off">
+    <button class="btn btn-primary" id="hidEnableBtn" style="width:100%;margin-top:10px">${esc(title)}</button>
+  `);
+  setTimeout(()=>{
+    document.getElementById('hidEnableBtn').onclick = async()=>{
+      const a=document.getElementById('hidPwdNew').value;
+      const b=document.getElementById('hidPwdConf').value;
+      if(!a || a.length<4){ toast(state.cfg.lang==='pl'?'Hasło min. 4 znaki':'Password min 4 chars'); return; }
+      if(a!==b){ toast(state.cfg.lang==='pl'?'Hasła się różnią':'Passwords differ'); return; }
+      await enableHiddenNotebook(a);
+      closeSheet();
+      toast(t('toast.hiddenOn'));
+      renderHiddenHome();
+    };
+  }, 80);
+}
+
+async function pbkdf2Key(pwd, salt){
+  const enc=new TextEncoder();
+  const base = await crypto.subtle.importKey('raw', enc.encode(pwd), {name:'PBKDF2'}, false, ['deriveKey']);
+  return await crypto.subtle.deriveKey(
+    {name:'PBKDF2', salt, iterations:100000, hash:'SHA-256'},
+    base,
+    {name:'AES-GCM', length:256},
+    false, ['encrypt','decrypt']
+  );
+}
+async function enableHiddenNotebook(pwd){
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  state.cfg.hidden = {enabled:true, salt:b64encode(salt)};
+  saveCfg();
+  const key = await pbkdf2Key(pwd, salt);
+  state.hiddenKey = key;
+  state.hiddenDb  = {entries:[]};
+  await saveHiddenDb();
+}
+async function tryUnlockHidden(pwd){
+  try{
+    const salt = b64decode(state.cfg.hidden.salt);
+    const key = await pbkdf2Key(pwd, salt);
+    const raw = localStorage.getItem(LS_HIDDEN);
+    if(!raw){
+      // No data yet — just keep key
+      state.hiddenKey=key; state.hiddenDb={entries:[]};
+      return true;
+    }
+    const {iv, ct} = JSON.parse(raw);
+    const dec = await crypto.subtle.decrypt({name:'AES-GCM', iv:b64decode(iv)}, key, b64decode(ct));
+    const txt = new TextDecoder().decode(dec);
+    state.hiddenKey=key;
+    state.hiddenDb=JSON.parse(txt);
+    return true;
+  }catch(e){ return false; }
+}
+async function saveHiddenDb(){
+  if(!state.hiddenKey || !state.hiddenDb) return;
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const enc = new TextEncoder();
+  const ct = await crypto.subtle.encrypt({name:'AES-GCM', iv}, state.hiddenKey, enc.encode(JSON.stringify(state.hiddenDb)));
+  localStorage.setItem(LS_HIDDEN, JSON.stringify({iv:b64encode(iv), ct:b64encode(new Uint8Array(ct))}));
+}
+function b64encode(u8){ let s=''; u8.forEach(b=>s+=String.fromCharCode(b)); return btoa(s); }
+function b64decode(str){ const bin=atob(str); const u8=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) u8[i]=bin.charCodeAt(i); return u8; }
+
+function renderHiddenHome(){
+  const db = state.hiddenDb || {entries:[]};
+  let rows = db.entries.map((e,i)=>`
+    <div class="hidden-entry" data-idx="${i}">
+      <div class="hidden-entry-title">${esc(e.title||t('note.untitled'))}</div>
+      <div class="hidden-entry-preview">${esc((e.content||'').slice(0,120))}</div>
+      <div class="hidden-entry-meta">${fmtDate(e.updatedAt||e.createdAt)}</div>
+    </div>
+  `).join('');
+  if(!rows) rows = `<div class="empty-state"><h3 style="font-size:14px">${esc(t('hidden.entries'))}</h3></div>`;
+  openSheet(`🔒 ${t('hidden.title')}`, `
+    <div style="display:flex;gap:6px;margin-bottom:10px">
+      <button class="btn btn-primary" id="hidNew" style="flex:1">${esc(t('hidden.newEntry'))}</button>
+      <button class="btn btn-ghost" id="hidLock">${esc(t('hidden.lock'))}</button>
+    </div>
+    <div id="hidList">${rows}</div>
+    <div style="display:flex;gap:6px;margin-top:14px">
+      <button class="btn btn-ghost" id="hidChangePwd" style="flex:1;font-size:12px">${esc(t('hidden.changePassword'))}</button>
+      <button class="btn btn-ghost" id="hidDisable" style="flex:1;font-size:12px;color:var(--red)">${esc(t('hidden.disable'))}</button>
+    </div>
+  `);
+  setTimeout(()=>{
+    document.getElementById('hidNew').onclick = ()=>editHiddenEntry(null);
+    document.getElementById('hidLock').onclick = ()=>{ state.hiddenKey=null; state.hiddenDb=null; closeSheet(); toast(t('toast.hiddenOff')); };
+    document.getElementById('hidChangePwd').onclick = ()=>openHiddenSetup(false);
+    document.getElementById('hidDisable').onclick = async()=>{
+      if(!confirm(state.cfg.lang==='pl'?'Na pewno? Dane zostaną utracone.':'Really? Data will be lost.')) return;
+      state.cfg.hidden = {enabled:false, salt:null};
+      saveCfg();
+      localStorage.removeItem(LS_HIDDEN);
+      state.hiddenKey=null; state.hiddenDb=null;
+      closeSheet();
+      toast(t('toast.hiddenOff'));
+    };
+    document.querySelectorAll('.hidden-entry').forEach(el=>{
+      el.onclick = ()=>editHiddenEntry(Number(el.dataset.idx));
+    });
+  }, 80);
+}
+function editHiddenEntry(idx){
+  const isNew = idx===null;
+  const e = isNew ? {id:uid('he'), title:'', content:'', createdAt:Date.now(), updatedAt:Date.now()} : state.hiddenDb.entries[idx];
+  openSheet(`🔒 ${isNew?t('hidden.newEntry'):e.title||t('note.untitled')}`, `
+    <input type="text" class="field-input" id="hidET" value="${esc(e.title||'')}" placeholder="${esc(t('ph.noteTitle'))}">
+    <textarea class="field-textarea" id="hidEC" style="min-height:180px;margin-top:8px" placeholder="${esc(t('ph.blockText'))}">${esc(e.content||'')}</textarea>
+    <div style="display:flex;gap:6px;margin-top:8px">
+      <button class="btn btn-primary" id="hidSave" style="flex:1">${esc(t('common.save'))}</button>
+      <button class="btn btn-ghost" id="hidBack">${esc(t('common.back'))}</button>
+      ${isNew?'':`<button class="btn btn-ghost" id="hidDel" style="color:var(--red)">${esc(t('common.delete'))}</button>`}
+    </div>
+  `);
+  setTimeout(()=>{
+    document.getElementById('hidSave').onclick = async()=>{
+      e.title = document.getElementById('hidET').value;
+      e.content = document.getElementById('hidEC').value;
+      e.updatedAt = Date.now();
+      if(isNew) state.hiddenDb.entries.unshift(e);
+      await saveHiddenDb();
+      renderHiddenHome();
+      toast(t('toast.saved'));
+    };
+    document.getElementById('hidBack').onclick = renderHiddenHome;
+    if(!isNew){
+      document.getElementById('hidDel').onclick = async()=>{
+        if(!confirm(t('confirm.delNote'))) return;
+        state.hiddenDb.entries.splice(idx,1);
+        await saveHiddenDb();
+        renderHiddenHome();
+        toast(t('toast.deleted'));
+      };
+    }
+  }, 80);
 }
 
 /* ═══ Session timer — per-note and global ═══ */
