@@ -583,9 +583,11 @@ mark.find-hit.cur{outline:2px solid var(--accent);}
     <div class="tut-desc" id="tutDesc"></div>
     <div class="tut-dots" id="tutDots"></div>
     <div class="tut-nav">
+      <button class="btn btn-ghost" onclick="tutPrev()" id="tutPrevBtn">‹</button>
       <button class="btn btn-ghost" onclick="tutSkip()" style="flex:1"><span data-i18n="tut.skip"></span></button>
       <button class="btn btn-primary" onclick="tutNext()"><span id="tutNextLabel"></span></button>
     </div>
+    <div style="text-align:center;margin-top:6px;font-size:11px;color:var(--text3)" data-i18n="tut.swipeHint">← przesuń palcem aby przewinąć →</div>
   </div>
 </div>
 
@@ -732,14 +734,17 @@ pl:{
 'ob.icon.title':'Ikona','ob.icon.titleEm':'projektu','ob.icon.sub':'Żeby odróżnić od innych. Zmienisz kiedykolwiek.',
 'ob.label.title':'Jak nazwiesz','ob.label.titleEm':'swoje działy?','ob.label.sub':'Notatki w projekcie dzielą się na działy (np. Rozdziały, Akty, Części). Wybierz jak je nazwiesz — zawsze możesz zmienić.','ob.label.pick':'Wybierz lub wpisz własną','ob.label.customLabel':'Własna nazwa',
 'ob.done.title':'Gotowe','ob.done.sub':'Chcesz zobaczyć jak to działa? Krótki samouczek wyjaśni.','ob.done.tutorial':'Pokaż samouczek','ob.done.skip':'Pomiń',
-'tut.skip':'Pomiń','tut.done':'Zaczynam',
+'tut.skip':'Pomiń','tut.done':'Zaczynam','tut.swipeHint':'← przesuń palcem aby przewinąć →',
 'tut.1.title':'Start','tut.1.desc':'Tu są wszystkie projekty. Tapnij by wejść.',
 'tut.2.title':'Szybka notatka','tut.2.desc':'Przycisk + na ekranie startowym = szybki wrzut myśli. Ląduje w Inboxie, potem segregujesz.',
 'tut.3.title':'Inbox + Archiwum','tut.3.desc':'W Inboxie czeka to co wrzuciłeś. W Archiwum — to co skończyłeś albo odłożyłeś.',
 'tut.4.title':'Projekt','tut.4.desc':'Wchodząc w projekt widzisz od razu WSZYSTKIE notatki, pogrupowane w działy. Działy to nie foldery — to separatory.',
 'tut.5.title':'Działy','tut.5.desc':'Dodaj dział przyciskiem. Przytrzymaj by zmienić kolejność. Notatki same wpadają w ostatni dział.',
-'tut.6.title':'Echo','tut.6.desc':'Apka co jakiś czas wyłowi starą notatkę która zasługuje na powrót. Decydujesz: zostaw, zarchiwizuj, rozwiń.',
-'tut.7.title':'Backup','tut.7.desc':'Ustawienia → Eksport. Dane siedzą w przeglądarce — bez eksportu znikną przy czyszczeniu.',
+'tut.6.title':'Rodzaje bloków','tut.6.desc':'Tekst, nagłówek, markdown, kod uruchamialny (HTML/JS/CSS), dyktowanie, obraz, audio, rysunek. Własne typy z kolorem dodasz w projekcie.',
+'tut.7.title':'Przeciągaj','tut.7.desc':'Wszystko można układać: bloki, notatki, projekty, działy, foldery. Chwyć za uchwyt z kropkami i przeciągnij.',
+'tut.8.title':'Echo','tut.8.desc':'Apka wyłowi starą notatkę która zasługuje na powrót. Decydujesz: zostaw, zarchiwizuj, rozwiń. Reguły konfigurujesz sam.',
+'tut.9.title':'Ukryty notatnik','tut.9.desc':'Przytrzymaj logo YEStess przez 3 sekundy. Wpisz hasło — odsłonisz równoległy notatnik szyfrowany AES-GCM.',
+'tut.10.title':'Backup','tut.10.desc':'Ustawienia → Eksport. Dane siedzą w przeglądarce — bez eksportu znikną przy czyszczeniu.',
 'home.quickTitle':'Szybka notatka','home.quickSub':'Wpadnie do Inboxu','home.yourProjects':'Projekty','home.folders':'Foldery','home.empty.title':'Zacznij tworzyć','home.empty.desc':'Przycisk + stworzy nowy projekt lub szybką notatkę.',
 'home.echoLabel':'ECHO','home.echoMeta':'Napisane {days} dni temu','home.echo.keep':'Zostaw','home.echo.open':'Otwórz','home.echo.archive':'Archiwum',
 'inbox.title':'Inbox','inbox.archive':'Archiwum','inbox.empty.inbox.title':'Pusto w Inboxie','inbox.empty.inbox.desc':'Szybkie notatki lądują tu.','inbox.empty.archive.title':'Archiwum puste','inbox.empty.archive.desc':'Notatki które zarchiwizujesz trafią tutaj.',
@@ -775,14 +780,17 @@ en:{
 'ob.icon.title':'Project','ob.icon.titleEm':'icon','ob.icon.sub':'To tell it apart. Change anytime.',
 'ob.label.title':'Name your','ob.label.titleEm':'sections','ob.label.sub':'Notes in a project split into sections (Chapters, Acts, Parts). Pick what to call them.','ob.label.pick':'Pick or type your own','ob.label.customLabel':'Custom name',
 'ob.done.title':'Done','ob.done.sub':'Want to see how it works? Quick tour below.','ob.done.tutorial':'Show tour','ob.done.skip':'Skip',
-'tut.skip':'Skip','tut.done':'Start',
+'tut.skip':'Skip','tut.done':'Start','tut.swipeHint':'← swipe to navigate →',
 'tut.1.title':'Home','tut.1.desc':'All your projects live here. Tap to open.',
 'tut.2.title':'Quick note','tut.2.desc':'The + button on Home = fast thought drop. Lands in Inbox, sort it later.',
 'tut.3.title':'Inbox + Archive','tut.3.desc':'Inbox holds what you dropped. Archive holds what you finished or shelved.',
 'tut.4.title':'Project','tut.4.desc':'Open a project to see ALL notes at once, grouped by section. Sections are separators, not folders.',
 'tut.5.title':'Sections','tut.5.desc':'Add a section with the button. Hold to reorder. New notes fall into the last section.',
-'tut.6.title':'Echo','tut.6.desc':'Every so often the app surfaces an old note worth revisiting. You choose: keep, archive, expand.',
-'tut.7.title':'Backup','tut.7.desc':'Settings → Export. Data lives in the browser — no export, no safety.',
+'tut.6.title':'Block types','tut.6.desc':'Text, heading, markdown, runnable code (HTML/JS/CSS), dictation, image, audio, drawing. Custom colored types per project.',
+'tut.7.title':'Drag everything','tut.7.desc':'Reorder blocks, notes, projects, sections, folders. Grab the dotted handle and drag.',
+'tut.8.title':'Echo','tut.8.desc':'The app surfaces an old note worth revisiting. You choose: keep, archive, open. Rules are configurable.',
+'tut.9.title':'Hidden notebook','tut.9.desc':'Hold the YEStess logo for 3 seconds. Enter password — a parallel notebook encrypted with AES-GCM opens.',
+'tut.10.title':'Backup','tut.10.desc':'Settings → Export. Data lives in the browser — no export, no safety.',
 'home.quickTitle':'Quick note','home.quickSub':'Lands in Inbox','home.yourProjects':'Projects','home.folders':'Folders','home.empty.title':'Start creating','home.empty.desc':'The + button makes a new project or quick note.',
 'home.echoLabel':'ECHO','home.echoMeta':'Written {days} days ago','home.echo.keep':'Keep','home.echo.open':'Open','home.echo.archive':'Archive',
 'inbox.title':'Inbox','inbox.archive':'Archive','inbox.empty.inbox.title':'Inbox is empty','inbox.empty.inbox.desc':'Quick notes land here.','inbox.empty.archive.title':'Archive empty','inbox.empty.archive.desc':'Notes you archive will show here.',
@@ -1200,7 +1208,7 @@ function finishOnboarding(){
 }
 
 /* ═══ TUTORIAL ═══ */
-const TUT_STEPS=[{id:1,render:tutHome},{id:2,render:tutQuick},{id:3,render:tutInbox},{id:4,render:tutProject},{id:5,render:tutSections},{id:6,render:tutEcho},{id:7,render:tutBackup}];
+const TUT_STEPS=[{id:1,render:tutHome},{id:2,render:tutQuick},{id:3,render:tutInbox},{id:4,render:tutProject},{id:5,render:tutSections},{id:6,render:tutBlocks},{id:7,render:tutDrag},{id:8,render:tutEcho},{id:9,render:tutHidden},{id:10,render:tutBackup}];
 function startTutorial(){ state.tut.idx=0; document.getElementById('onboarding').classList.remove('active'); document.getElementById('tutorial').classList.add('active'); renderTut(); }
 function renderTut(){
   const s=TUT_STEPS[state.tut.idx];
@@ -1210,10 +1218,39 @@ function renderTut(){
   const d=document.getElementById('tutDots'); d.innerHTML='';
   TUT_STEPS.forEach((_,i)=>{const dot=document.createElement('div'); dot.className='tut-dot'+(i===state.tut.idx?' active':''); d.appendChild(dot);});
   document.getElementById('tutNextLabel').textContent = state.tut.idx===TUT_STEPS.length-1?t('tut.done'):t('common.next');
+  const prev=document.getElementById('tutPrevBtn'); if(prev) prev.style.visibility = state.tut.idx===0?'hidden':'visible';
 }
 function tutNext(){ if(state.tut.idx>=TUT_STEPS.length-1){tutFinish();return;} state.tut.idx++; renderTut(); }
+function tutPrev(){ if(state.tut.idx>0){ state.tut.idx--; renderTut(); } }
 function tutSkip(){ tutFinish(); }
-function tutFinish(){ document.getElementById('tutorial').classList.remove('active'); finishOnboarding(); }
+function tutFinish(){
+  document.getElementById('tutorial').classList.remove('active');
+  if(state.cfg){ state.cfg.tutorialSeen=true; saveCfg(); }
+  if(state.cfg && state.cfg.onboarded){ enterApp(); } else { finishOnboarding(); }
+}
+function replayTutorial(){
+  closeSheet();
+  state.tut.idx=0;
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('tutorial').classList.add('active');
+  renderTut();
+}
+// Touch swipe support for tutorial
+(function setupTutSwipe(){
+  let sx=0, sy=0;
+  document.addEventListener('touchstart', e=>{
+    if(!document.getElementById('tutorial').classList.contains('active')) return;
+    sx=e.touches[0].clientX; sy=e.touches[0].clientY;
+  }, {passive:true});
+  document.addEventListener('touchend', e=>{
+    if(!document.getElementById('tutorial').classList.contains('active')) return;
+    const dx=e.changedTouches[0].clientX - sx;
+    const dy=e.changedTouches[0].clientY - sy;
+    if(Math.abs(dx)>50 && Math.abs(dx)>Math.abs(dy)){
+      if(dx<0) tutNext(); else tutPrev();
+    }
+  }, {passive:true});
+})();
 function tutHome(c){ c.innerHTML=`<svg width="100%" height="100%" viewBox="0 0 320 160"><rect x="20" y="18" width="280" height="44" rx="12" fill="var(--accent-s)" stroke="var(--accent-b)"/><circle cx="44" cy="40" r="12" fill="var(--accent)"/><line x1="44" y1="34" x2="44" y2="46" stroke="white" stroke-width="2"/><line x1="38" y1="40" x2="50" y2="40" stroke="white" stroke-width="2"/><rect x="64" y="32" width="120" height="6" rx="3" fill="var(--accent)"/><rect x="64" y="44" width="90" height="4" rx="2" fill="var(--accent)" opacity="0.5"/><rect x="20" y="74" width="280" height="28" rx="8" fill="var(--surface)" stroke="var(--border)"/><rect x="28" y="80" width="16" height="16" rx="4" fill="var(--surface2)"/><rect x="50" y="82" width="80" height="4" rx="2" fill="var(--text2)"/><rect x="50" y="90" width="60" height="3" rx="1.5" fill="var(--text3)"/><rect x="20" y="110" width="280" height="28" rx="8" fill="var(--surface)" stroke="var(--border)"/><rect x="28" y="116" width="16" height="16" rx="4" fill="var(--surface2)"/><rect x="50" y="118" width="70" height="4" rx="2" fill="var(--text2)"/></svg>`; }
 function tutQuick(c){ c.innerHTML=`<svg width="100%" height="100%" viewBox="0 0 320 160"><rect x="240" y="90" width="50" height="50" rx="25" fill="var(--accent)"/><line x1="265" y1="104" x2="265" y2="126" stroke="white" stroke-width="3"/><line x1="254" y1="115" x2="276" y2="115" stroke="white" stroke-width="3"/><circle cx="265" cy="115" r="30" fill="none" stroke="var(--accent)" stroke-width="2" opacity="0.5"><animate attributeName="r" values="30;44;30" dur="1.6s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.6;0;0.6" dur="1.6s" repeatCount="indefinite"/></circle><rect x="20" y="30" width="210" height="70" rx="10" fill="var(--surface)" stroke="var(--amber)"/><rect x="32" y="42" width="60" height="4" rx="2" fill="var(--amber)"/><rect x="32" y="54" width="150" height="3" rx="1.5" fill="var(--text2)"/><rect x="32" y="62" width="130" height="3" rx="1.5" fill="var(--text2)"/><rect x="32" y="70" width="90" height="3" rx="1.5" fill="var(--text3)"/><rect x="32" y="84" width="70" height="3" rx="1.5" fill="var(--amber)"/></svg>`; }
 function tutInbox(c){ c.innerHTML=`<svg width="100%" height="100%" viewBox="0 0 320 160"><rect x="30" y="20" width="260" height="30" rx="8" fill="var(--surface2)"/><rect x="42" y="26" width="100" height="18" rx="6" fill="var(--surface)"/><text x="92" y="39" text-anchor="middle" font-size="10" font-weight="600" fill="var(--text)">INBOX</text><text x="206" y="39" text-anchor="middle" font-size="10" font-weight="600" fill="var(--text3)">ARCHIWUM</text><rect x="30" y="60" width="260" height="30" rx="6" fill="var(--surface)" stroke="var(--border)" stroke-width="1"/><rect x="30" y="60" width="3" height="30" fill="var(--amber)"/><rect x="42" y="68" width="120" height="4" rx="2" fill="var(--text2)"/><rect x="42" y="78" width="180" height="3" rx="1.5" fill="var(--text3)"/><rect x="30" y="96" width="260" height="30" rx="6" fill="var(--surface)" stroke="var(--border)" stroke-width="1" opacity="0.7"/><rect x="30" y="96" width="3" height="30" fill="var(--text3)"/><rect x="42" y="104" width="100" height="4" rx="2" fill="var(--text3)"/><rect x="42" y="114" width="140" height="3" rx="1.5" fill="var(--text3)" opacity="0.6"/></svg>`; }
@@ -1221,6 +1258,9 @@ function tutProject(c){ c.innerHTML=`<svg width="100%" height="100%" viewBox="0 
 function tutSections(c){ c.innerHTML=`<svg width="100%" height="100%" viewBox="0 0 320 160"><g><circle cx="40" cy="40" r="3" fill="var(--text3)"/><circle cx="40" cy="48" r="3" fill="var(--text3)"/><circle cx="40" cy="56" r="3" fill="var(--text3)"/><animateTransform attributeName="transform" type="translate" values="0,0;0,60;0,60;0,0;0,0" dur="3s" repeatCount="indefinite"/></g><text x="55" y="52" font-family="Georgia, serif" font-style="italic" font-size="14" fill="var(--text2)"><animate attributeName="y" values="52;112;112;52;52" dur="3s" repeatCount="indefinite"/>Akt I</text><line x1="105" y1="48" x2="290" y2="48" stroke="var(--border)"><animate attributeName="y1" values="48;108;108;48;48" dur="3s" repeatCount="indefinite"/><animate attributeName="y2" values="48;108;108;48;48" dur="3s" repeatCount="indefinite"/></line><text x="30" y="90" font-family="Georgia, serif" font-style="italic" font-size="14" fill="var(--text2)"><animate attributeName="y" values="90;30;30;90;90" dur="3s" repeatCount="indefinite"/>Akt II</text><line x1="80" y1="86" x2="290" y2="86" stroke="var(--border)"><animate attributeName="y1" values="86;26;26;86;86" dur="3s" repeatCount="indefinite"/><animate attributeName="y2" values="86;26;26;86;86" dur="3s" repeatCount="indefinite"/></line></svg>`; }
 function tutEcho(c){ c.innerHTML=`<svg width="100%" height="100%" viewBox="0 0 320 160"><rect x="30" y="30" width="260" height="100" rx="14" fill="rgba(201,168,76,0.08)" stroke="var(--amber)" stroke-width="1.5"/><text x="44" y="50" font-size="9" font-weight="600" fill="var(--amber)" letter-spacing="2">ECHO</text><rect x="44" y="58" width="160" height="4" rx="2" fill="var(--text)"/><rect x="44" y="70" width="210" height="3" rx="1.5" fill="var(--text3)"/><rect x="44" y="78" width="180" height="3" rx="1.5" fill="var(--text3)"/><text x="44" y="94" font-size="9" font-style="italic" fill="var(--text3)">14 dni temu</text><rect x="44" y="104" width="60" height="18" rx="5" fill="var(--surface)" stroke="var(--border)"/><text x="74" y="115" text-anchor="middle" font-size="9" fill="var(--text)">Zostaw</text><rect x="110" y="104" width="60" height="18" rx="5" fill="var(--surface)" stroke="var(--border)"/><text x="140" y="115" text-anchor="middle" font-size="9" fill="var(--text)">Otwórz</text><rect x="176" y="104" width="70" height="18" rx="5" fill="var(--amber)"/><text x="211" y="115" text-anchor="middle" font-size="9" fill="#1a1a1a" font-weight="600">Archiwum</text></svg>`; }
 function tutBackup(c){ c.innerHTML=`<svg width="100%" height="100%" viewBox="0 0 320 160"><rect x="90" y="30" width="140" height="90" rx="10" fill="var(--surface)" stroke="var(--border)" stroke-width="2"/><rect x="104" y="48" width="112" height="3" rx="1.5" fill="var(--text3)"/><rect x="104" y="58" width="84" height="3" rx="1.5" fill="var(--text3)"/><rect x="104" y="68" width="100" height="3" rx="1.5" fill="var(--text3)"/><rect x="104" y="78" width="70" height="3" rx="1.5" fill="var(--text3)"/><text x="160" y="104" text-anchor="middle" font-family="monospace" font-size="9" fill="var(--accent)">backup.json</text><path d="M 240 78 L 270 78 L 270 108 L 285 108 L 255 138 L 225 108 L 240 108 Z" fill="var(--accent)" opacity="0"><animate attributeName="opacity" values="0;1;0" dur="2.2s" repeatCount="indefinite"/></path></svg>`; }
+function tutBlocks(c){ c.innerHTML=`<svg width="100%" height="100%" viewBox="0 0 320 160"><rect x="30" y="20" width="260" height="24" rx="6" fill="var(--surface)" stroke="var(--border)"/><text x="42" y="36" font-size="10" fill="var(--text2)">Tekst</text><rect x="30" y="50" width="260" height="24" rx="6" fill="var(--surface)" stroke="var(--amber)" stroke-width="1.5"/><text x="42" y="66" font-size="10" font-weight="600" fill="var(--amber)">Markdown</text><rect x="30" y="80" width="260" height="24" rx="6" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.5"/><text x="42" y="96" font-size="10" font-weight="600" fill="var(--accent)">Kod ▶ uruchom</text><rect x="30" y="110" width="260" height="24" rx="6" fill="var(--surface)" stroke="var(--border)"/><text x="42" y="126" font-size="10" fill="var(--text2)">Dyktowanie 🎙</text></svg>`; }
+function tutDrag(c){ c.innerHTML=`<svg width="100%" height="100%" viewBox="0 0 320 160"><g><rect x="30" y="40" width="260" height="30" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"><animate attributeName="y" values="40;80;40" dur="2.4s" repeatCount="indefinite"/></rect><circle cx="44" cy="55" r="2" fill="var(--accent)"><animate attributeName="cy" values="55;95;55" dur="2.4s" repeatCount="indefinite"/></circle><circle cx="52" cy="55" r="2" fill="var(--accent)"><animate attributeName="cy" values="55;95;55" dur="2.4s" repeatCount="indefinite"/></circle><rect x="66" y="48" width="120" height="4" rx="2" fill="var(--text2)"><animate attributeName="y" values="48;88;48" dur="2.4s" repeatCount="indefinite"/></rect><rect x="66" y="58" width="80" height="3" rx="1.5" fill="var(--text3)"><animate attributeName="y" values="58;98;58" dur="2.4s" repeatCount="indefinite"/></rect></g><rect x="30" y="80" width="260" height="30" rx="8" fill="var(--surface2)" opacity="0.5"/><rect x="30" y="120" width="260" height="30" rx="8" fill="var(--surface2)" opacity="0.5"/></svg>`; }
+function tutHidden(c){ c.innerHTML=`<svg width="100%" height="100%" viewBox="0 0 320 160"><g transform="translate(160 80)"><circle r="50" fill="none" stroke="var(--accent)" stroke-width="2" opacity="0.3"><animate attributeName="r" values="40;60;40" dur="2s" repeatCount="indefinite"/></circle><rect x="-22" y="-16" width="44" height="32" rx="6" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"/><path d="M -14 -16 v -6 a 14 14 0 0 1 28 0 v 6" fill="none" stroke="var(--accent)" stroke-width="2"/><circle cx="0" cy="3" r="3" fill="var(--accent)"/></g><text x="160" y="150" text-anchor="middle" font-size="10" font-style="italic" fill="var(--text3)">przytrzymaj logo 3s</text></svg>`; }
 
 /* ═══ APP / ROUTING ═══ */
 const SVG={
@@ -3743,6 +3783,68 @@ function closeSheet(){
   document.getElementById('sheetBackdrop').classList.remove('open');
   document.getElementById('sheet').classList.remove('open');
 }
+
+/* ═══ Help / Function explainer ═══ */
+function openHelp(topic){
+  const m=document.getElementById('helpModal');
+  document.getElementById('helpTitle').textContent = t('help.title');
+  document.getElementById('helpBody').innerHTML = helpContent(topic);
+  m.classList.add('open');
+}
+function closeHelp(){ document.getElementById('helpModal').classList.remove('open'); }
+
+function helpContent(topic){
+  const all = `
+    <h4>📐 Struktura</h4>
+    <p><strong>Foldery</strong> grupują projekty. <strong>Projekty</strong> mają własne <strong>działy</strong> (rozdziały, akty, części — sam wybierasz). W działach żyją <strong>notatki</strong>, a notatki składają się z <strong>bloków</strong>.</p>
+
+    <h4>📥 Inbox & Archiwum</h4>
+    <p>Szybkie myśli wrzucasz do <strong>Inboxu</strong> (FAB +). Z Inboxu przenosisz do projektu albo zostawiasz. <strong>Archiwum</strong> = notatki które „odłożyłeś". Pin działa wszędzie.</p>
+
+    <h4>🧩 Bloki</h4>
+    <p>Każdy blok ma swój typ: tekst, nagłówek, cytat, zadania (todo), wyróżnienie, kod, markdown, obraz, audio, rysunek, dyktowanie. Możesz tworzyć własne typy z kolorem (per projekt).</p>
+
+    <h4>▶ Kod</h4>
+    <p>Bloki kodu z językiem HTML / JS / CSS uruchamiają się w sandboxowanej ramce iframe. C++/Python/Java są tylko podświetlane (przeglądarka ich nie wykona).</p>
+
+    <h4>📝 Markdown</h4>
+    <p>Pisz w markdown, przełącz na podgląd. Wspierane: <code># nagłówek</code>, <code>**pogrubienie**</code>, <code>*kursywa*</code>, <code>\`kod\`</code>, listy, cytaty <code>&gt;</code>, linki <code>[tekst](url)</code>, <code>\`\`\`kod\`\`\`</code>, <code>---</code>.</p>
+
+    <h4>🎙 Dyktowanie</h4>
+    <p>Pasek formatowania ma ikonę mikrofonu — dyktuje do bieżącego bloku. Osobny <strong>blok dyktowania</strong> nagrywa ciągle, dopisuje końcowe wyniki.</p>
+
+    <h4>🔍 Znajdź / zamień</h4>
+    <p>W edytorze: pasek formatowania → ikona lupy. Lub menu (3 kropki) → „Znajdź / zamień". Strzałki ↑↓ skaczą po wynikach. „Wszystko" zastępuje wszystkie naraz.</p>
+
+    <h4>✋ Przeciąganie</h4>
+    <p>Wszędzie gdzie widzisz kropki ⋮⋮ — chwyć i przeciągnij. Kolejność bloków, notatek, projektów, działów, folderów.</p>
+
+    <h4>🔄 Echo</h4>
+    <p>Apka czasem podsuwa starszą notatkę do ponownego rozważenia. Reguły dostosowujesz: dni od ostatniego otwarcia, minimalne słowa, minimalne otwarcia. Możesz mieć wiele reguł.</p>
+
+    <h4>🔒 Ukryty notatnik</h4>
+    <p>Przytrzymaj logo YEStess w nagłówku przez 3 sekundy — pojawi się prompt na hasło. Dane szyfrowane AES-GCM (PBKDF2 100k iteracji). Hasło nie jest nigdzie zapisywane — strata = utrata danych.</p>
+
+    <h4>🎨 Motywy & czcionki</h4>
+    <p>16 motywów (8 jasnych + 8 ciemnych). Wybierasz w Ustawieniach. Czcionki: 4 zestawy (klasyczny, nowoczesny, techniczny, elegancki).</p>
+
+    <h4>💾 Backup</h4>
+    <p>Dane siedzą w localStorage przeglądarki. Bez eksportu znikną przy czyszczeniu! Eksport = JSON. Import = scal z istniejącymi LUB zastąp.</p>
+
+    <h4>📲 Instalacja PWA</h4>
+    <p>Ustawienia → „Zainstaluj na urządzeniu". Na Androidzie: prompt instalacyjny. Na iOS: menu Safari → „Dodaj do ekranu głównego".</p>
+
+    <h4>📸 Eksport jako obraz</h4>
+    <p>Z menu notatki: „Zapisz jako obraz" — zrzut PNG całej notatki, gotowy do udostępnienia.</p>
+
+    <h4>📊 Statystyki</h4>
+    <p>Każda notatka i projekt mają własne statystyki: słowa, znaki, bloki, otwarcia, czas tej sesji, łączny czas pracy.</p>
+
+    <h4>⌨️ Skróty klawiaturowe</h4>
+    <p><kbd>Esc</kbd> — zamknij sheet / draw modal / find. <kbd>Enter</kbd> w bloku check — nowa pozycja. <kbd>Backspace</kbd> na pustej pozycji — usuń.</p>
+  `;
+  return all;
+}
 // action list handlers via delegation
 document.addEventListener('click',(e)=>{
   const row=e.target.closest('.sheet-body .action-row');
@@ -3770,7 +3872,9 @@ document.addEventListener('input', e=>{
 document.addEventListener('keydown', e=>{
   // close sheet on Escape
   if(e.key==='Escape'){
-    if(document.getElementById('drawModal').classList.contains('active')){ closeDraw(); }
+    if(document.getElementById('helpModal')?.classList.contains('open')){ closeHelp(); }
+    else if(document.getElementById('findBar')?.classList.contains('open')){ closeFind(); }
+    else if(document.getElementById('drawModal').classList.contains('active')){ closeDraw(); }
     else if(document.getElementById('sheet').classList.contains('open')){ closeSheet(); }
   }
 });
