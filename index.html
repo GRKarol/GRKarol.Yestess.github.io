@@ -1508,10 +1508,10 @@ const SVG={
 function enterApp(){
   ['splash','onboarding','tutorial','langPicker'].forEach(id=>document.getElementById(id).classList.remove('active'));
   document.getElementById('app-screen').classList.add('active');
-  applyTheme(); applyI18n();
+  applyTheme(); applyFont(); applyI18n();
   renderCurrentView();
 }
-function applyTheme(){ document.body.setAttribute('data-theme', state.cfg.theme||'light-paper'); }
+function applyTheme(){ document.body.setAttribute('data-theme', state.cfg.theme||'light-paper'); applyThemeColorMeta(); }
 
 function switchTab(tab){
   state.nav.tab=tab;
