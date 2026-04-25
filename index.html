@@ -233,10 +233,14 @@ svg{display:block;flex-shrink:0;}
 .proj-section-bar.dragging{opacity:0.4;}
 .proj-section-bar.drag-over-top{box-shadow:0 -2px 0 0 var(--accent);}
 .proj-section-bar.drag-over-bottom{box-shadow:0 2px 0 0 var(--accent);}
-.recently-edited-bar{display:flex;align-items:center;gap:8px;margin:6px 0 8px;padding:0 2px;}
+.recently-edited-bar{display:flex;align-items:center;gap:8px;margin:6px 0 6px;padding:0 2px;}
 .recently-edited-label{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);opacity:0.85;white-space:nowrap;}
 .recently-edited-line{flex:1;height:1px;background:var(--accent-b);}
-.note-card.recently-edited-card{border-left:3px solid var(--accent);}
+.recently-edited-card{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--r);margin-bottom:4px;cursor:pointer;transition:var(--trans);}
+.recently-edited-card:active{background:var(--surface2);}
+.recently-edited-card-icon{font-size:18px;flex-shrink:0;opacity:0.7;}
+.recently-edited-card-title{flex:1;font-size:14px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.recently-edited-card-time{font-size:11px;color:var(--text3);flex-shrink:0;}
 
 .note-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-bottom:8px;transition:var(--trans);border-left:3px solid var(--border2);}
 .note-card:active{background:var(--surface2);transform:scale(0.99);}
@@ -272,7 +276,7 @@ body.kbd-open .fmt-bar{bottom:calc(var(--kbd,0px) + 6px);}
 .block-act-btn{width:28px;height:28px;border-radius:8px;color:var(--text3);display:flex;align-items:center;justify-content:center;background:none;border:none;font-family:inherit;}
 .block-act-btn:active{background:var(--surface2);color:var(--text);}
 .block-act-btn svg{width:15px;height:15px;}
-.block-content{width:100%;background:transparent;color:var(--text);font-size:16px;line-height:1.55;min-height:24px;outline:none;}
+.block-content{width:100%;background:transparent;color:var(--text);font-size:16px;line-height:1.55;min-height:24px;outline:none;overflow-wrap:break-word;}
 [contenteditable="true"]:empty::before{content:attr(data-placeholder);color:var(--text3);pointer-events:none;}
 [contenteditable="true"] ul,[contenteditable="true"] ol{padding-left:22px;margin:4px 0;}
 [contenteditable="true"] li{margin:2px 0;}
@@ -385,7 +389,7 @@ body.kbd-open .fmt-bar{bottom:calc(var(--kbd,0px) + 6px);}
 .translate-footer{display:flex;gap:10px;padding:12px 14px calc(12px + var(--safe-bot));border-top:1px solid var(--border);}
 .lang-chip{padding:10px 16px;background:var(--surface);border:1.5px solid var(--border);border-radius:20px;font-size:14px;font-family:inherit;color:var(--text);transition:var(--trans);display:inline-flex;align-items:center;gap:6px;margin:4px;}
 .lang-chip:active{background:var(--surface2);transform:scale(0.96);}
-.lang-grid{display:flex;flex-wrap:wrap;padding:8px 2px;}
+.translate-chip-wrap{display:flex;flex-wrap:wrap;padding:8px 2px;}
 .draw-toolbar{display:flex;gap:8px;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center;flex-wrap:wrap;}
 .draw-canvas-wrap{flex:1;overflow:hidden;background:white;position:relative;}
 #drawCanvas{display:block;touch-action:none;background:white;}
@@ -721,14 +725,14 @@ mark.find-hit.cur{outline:2px solid var(--accent);}
 <!-- Find/Replace overlay -->
 <div class="find-bar" id="findBar">
   <div class="find-row">
-    <input type="text" id="findInput" placeholder="Szukaj…" autocomplete="off">
+    <input type="search" id="findInput" placeholder="Szukaj…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
     <button class="find-btn" id="findPrev" title="Poprzedni">↑</button>
     <button class="find-btn" id="findNext" title="Następny">↓</button>
     <span class="find-count" id="findCount">0/0</span>
     <button class="find-btn" onclick="closeFind()">×</button>
   </div>
   <div class="find-row">
-    <input type="text" id="replaceInput" placeholder="Zastąp…" autocomplete="off">
+    <input type="search" id="replaceInput" placeholder="Zastąp…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
     <button class="find-btn" id="replaceOne">Zamień</button>
     <button class="find-btn" id="replaceAll">Wszystko</button>
   </div>
@@ -1441,7 +1445,7 @@ function finishOnboarding(){
     projects: [{
       id:projectId, folderId:null, name:state.ob.projectName, desc:state.ob.projectDesc, icon:state.ob.projectIcon,
       sectionLabel,
-      sections:[{id:sectionId, name:t('label.'+(state.ob.sectionLabelKey||'chapters'))+' 1', order:0}],
+      sections:[{id:sectionId, name:sectionLabel+' 1', order:0}],
       notes:[{id:noteId, sectionId, title:'', blocks:[{id:uid('b'),kind:'text',content:''}], pinned:false, createdAt:Date.now(), updatedAt:Date.now(), openCount:0, lastOpenedAt:Date.now()}],
       customBlockKinds:[],
       createdAt:Date.now(), updatedAt:Date.now()
@@ -1541,7 +1545,8 @@ const SVG={
   archive:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>',
   inbox:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>',
   layers:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>',
-  refresh:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>'
+  refresh:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>',
+  translate:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>'
 };
 
 function enterApp(){
@@ -1698,7 +1703,7 @@ function headerRightAction(){
     openSheet('', actionList([
       {icon:SVG.star, label:t('sheet.pinToggle'), on:togglePinNote},
       {icon:SVG.search, label:t('sheet.find'), on:()=>{ closeSheet(); openFind(); }},
-      {icon:SVG.layers, label:t('sheet.translate'), on:()=>{ closeSheet(); openTranslateUI(); }},
+      {icon:SVG.translate, label:t('sheet.translate'), on:()=>{ closeSheet(); openTranslateUI(); }},
       {icon:SVG.refresh, label:t('sheet.stats'), on:openNoteStats},
       {icon:SVG.copy, label:t('sheet.duplicate'), on:duplicateCurrentNote, hide:origin==='inbox'||origin==='archive'},
       {icon:SVG.image, label:t('sheet.exportPng'), on:()=>exportNoteAsPng(getNote()), hide:origin==='inbox'||origin==='archive'},
@@ -2082,8 +2087,11 @@ function renderProject(){
       reBar.className='recently-edited-bar';
       reBar.innerHTML=`<div class="recently-edited-label">${esc(t('project.recentlyEdited'))}</div><div class="recently-edited-line"></div>`;
       c.appendChild(reBar);
-      const card=makeNoteCard(recentNote,'project');
-      card.classList.add('recently-edited-card');
+      const card=document.createElement('div');
+      card.className='recently-edited-card';
+      const title=(recentNote.title||'').trim()||t('note.untitled');
+      card.innerHTML=`<div class="recently-edited-card-icon">✏️</div><div class="recently-edited-card-title">${esc(title)}</div><div class="recently-edited-card-time">${fmtDate(recentNote.updatedAt)}</div>`;
+      card.onclick=()=>openNote(recentNote.id, null);
       c.appendChild(card);
     }
   }
@@ -3192,6 +3200,7 @@ function renderDictationBlock(block, note){
   btn.title=t('block.dictation.start');
   btn.innerHTML=SVG.mic;
   let rec=null;
+  let accFinal=''; // accumulates final text across Android auto-restarts
   btn.onclick=()=>{
     if(rec){
       try{ rec.stop(); }catch(e){}
@@ -3200,16 +3209,20 @@ function renderDictationBlock(block, note){
       btn.title=t('block.dictation.start');
       return;
     }
+    accFinal = plainText(block.content||''); // seed from existing block text
+    if(accFinal) accFinal += ' ';
     const sr=getSR(); if(!sr){ toast(t('toast.voiceErr')); return; }
     sr.lang = state.cfg.lang==='en' ? 'en-US' : 'pl-PL';
     sr.continuous=true; sr.interimResults=true;
     sr.onresult = (e)=>{
-      let final='', interim='';
-      for(let i=0; i<e.results.length; i++){
-        if(e.results[i].isFinal) final += e.results[i][0].transcript+' ';
+      // Process only new/changed results starting from e.resultIndex
+      let newFinal='', interim='';
+      for(let i=e.resultIndex; i<e.results.length; i++){
+        if(e.results[i].isFinal) newFinal += e.results[i][0].transcript+' ';
         else interim += e.results[i][0].transcript;
       }
-      ce.innerHTML = esc(final.trimEnd()) + (interim?`<span style="opacity:0.5"> ${esc(interim)}</span>`:'');
+      accFinal += newFinal;
+      ce.innerHTML = esc(accFinal.trimEnd()) + (interim?`<span style="opacity:0.5"> ${esc(interim)}</span>`:'');
       block.content = ce.innerHTML; note.updatedAt=Date.now(); saveDb();
     };
     sr.onerror=()=>{ toast(t('toast.voiceErr')); };
@@ -3278,6 +3291,8 @@ function attachCheckHandlers(ce, block, note){
 }
 function attachContentEditable(ce, block, note){
   ce.addEventListener('input', ()=>{
+    // Collapse trailing <br> so block height shrinks when content is deleted
+    if(ce.innerHTML==='<br>') ce.innerHTML='';
     if(block.kind==='check') block.content=serializeCheckBlock(ce);
     else block.content=ce.innerHTML;
     note.updatedAt=Date.now(); saveDb();
@@ -3323,7 +3338,7 @@ function restoreSelection(){
 // Save selection continuously while editing
 document.addEventListener('selectionchange', ()=>{ if(activeCE) saveSelection(); });
 
-// Prevent default on fmt-btn press so caret stays in contenteditable
+// Save selection on mouse/pointer press (desktop) — preventDefault keeps caret in CE
 document.addEventListener('pointerdown', e=>{
   const btn=e.target.closest('.fmt-btn');
   if(!btn) return;
@@ -3333,8 +3348,26 @@ document.addEventListener('pointerdown', e=>{
 document.addEventListener('mousedown', e=>{
   if(e.target.closest('.fmt-btn')){ saveSelection(); e.preventDefault(); }
 });
+// On touch: save selection only; do NOT preventDefault — let touchend fire the command
 document.addEventListener('touchstart', e=>{
-  if(e.target.closest('.fmt-btn')){ saveSelection(); e.preventDefault(); }
+  if(e.target.closest('.fmt-btn')) saveSelection();
+}, {passive:true});
+function applyFmtCmd(btn){
+  if(!btn||!activeCE) return;
+  const cmd=btn.dataset.cmd;
+  if(cmd==='dismiss'){ activeCE.blur(); hideFmtBar(); return; }
+  if(cmd==='voice'){ restoreSelection(); startDictationInline(activeCE); return; }
+  if(cmd==='find'){ openFind(); return; }
+  restoreSelection();
+  try{ document.execCommand(cmd,false,null); }catch(e){}
+  saveSelection();
+}
+// Touch: execute on touchend so blur timer (400ms) hasn't cleared activeCE yet
+document.addEventListener('touchend', e=>{
+  const btn=e.target.closest('.fmt-btn');
+  if(!btn) return;
+  e.preventDefault(); // prevent the subsequent synthetic click
+  applyFmtCmd(btn);
 }, {passive:false});
 document.addEventListener('click', e=>{
   const btn=e.target.closest('.fmt-btn');
@@ -3389,7 +3422,7 @@ function renderAudioBlock(block, note){
     wrap.innerHTML = `
       <div class="audio-row"><audio class="block-audio" controls src="${block.content}"></audio></div>
       <div class="audio-row">
-        <button class="btn btn-ghost" data-recagain style="flex:1;min-height:36px;padding:8px 12px;font-size:13px">${SVG.mic}<span>${state.cfg.lang==='pl'?'Nagraj ponownie':'Record again'}</span></button>
+        <button class="audio-rec-btn" data-recagain style="flex:1;background:var(--surface);color:var(--text);border:1px solid var(--border)">${SVG.mic}<span>${state.cfg.lang==='pl'?'Nagraj ponownie':'Record again'}</span></button>
         <button class="btn btn-ghost" data-delete style="min-height:36px;padding:8px 12px;font-size:13px;color:var(--red)">${SVG.trash}</button>
       </div>`;
     wrap.querySelector('[data-recagain]').onclick = ()=>{ block.content=''; note.updatedAt=Date.now(); saveDb(); renderEditor(); setTimeout(()=>startAudioRecording(block.id), 100); };
@@ -4377,7 +4410,7 @@ const TRANSLATE_LANGS=[
 function openTranslateUI(){
   const src=state.cfg.lang==='pl'?'pl':'en';
   const body=document.createElement('div');
-  body.className='lang-grid';
+  body.className='translate-chip-wrap';
   TRANSLATE_LANGS.filter(l=>l.code!==src).forEach(l=>{
     const btn=document.createElement('button');
     btn.className='lang-chip';
