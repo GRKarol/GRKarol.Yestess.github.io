@@ -1614,6 +1614,7 @@ function headerLeftAction(){
     renderCurrentView();
   }
   else if(state.nav.view==='editor'){
+    closeNoteSession();
     if(state.nav.noteOrigin==='inbox'){
       // Ask: keep in inbox or move to project?
       offerExitChoice();
@@ -3993,8 +3994,80 @@ function openLangSettings(){
 }
 
 /* ═══ EXPORT / IMPORT ═══ */
+/* ═══ Export note as PNG (Canvas-based) ═══ */
+async function exportNoteAsPng(note){
+  closeSheet();
+  if(!note){ note = getNote(); }
+  if(!note) return;
+  toast(state.cfg.lang==='pl'?'Generuję obraz...':'Generating image...');
+  // Build a styled HTML representation, then rasterize via SVG foreignObject
+  const W = 720, padding = 36;
+  const cs = getComputedStyle(document.body);
+  const bg = cs.getPropertyValue('--bg').trim() || '#f7f6f2';
+  const surface = cs.getPropertyValue('--surface').trim() || '#fff';
+  const text = cs.getPropertyValue('--text').trim() || '#1a1916';
+  const text2 = cs.getPropertyValue('--text2').trim() || '#5c5a52';
+  const accent = cs.getPropertyValue('--accent').trim() || '#2c5f4a';
+  const border = cs.getPropertyValue('--border').trim() || '#e0ddd4';
+  const display = cs.getPropertyValue('--display').trim() || 'Georgia, serif';
+  const body = cs.getPropertyValue('--body').trim() || 'system-ui, sans-serif';
+  const title = (note.title||'').trim() || t('note.untitled');
+  const blocksHtml = (note.blocks||[]).map(b=>{
+    const c = b.content||'';
+    if(b.kind==='heading') return `<h2 style="font-family:${display};font-weight:600;font-size:22px;margin:18px 0 6px">${esc(plainText(c))||'&nbsp;'}</h2>`;
+    if(b.kind==='quote') return `<blockquote style="border-left:3px solid ${accent};padding:6px 14px;color:${text2};margin:10px 0;font-style:italic">${c||'&nbsp;'}</blockquote>`;
+    if(b.kind==='callout') return `<div style="background:${accent}20;border-left:3px solid ${accent};padding:10px 14px;border-radius:6px;margin:10px 0">${c||'&nbsp;'}</div>`;
+    if(b.kind==='code') { const parsed=parseCodeContent(c); return `<pre style="background:#1a1a1a;color:#eaeaea;padding:14px;border-radius:8px;overflow:hidden;font-family:monospace;font-size:13px;margin:10px 0;white-space:pre-wrap">${esc(parsed.code)}</pre>`; }
+    if(b.kind==='check'){
+      const lines=plainText(c).split('\n').map(l=>{ const done=/^\[x\]/i.test(l.trim()); const tx=l.replace(/^\[[x ]\]\s*/i,''); return `<div style="margin:4px 0">${done?'☑':'☐'} ${esc(tx)}</div>`; }).join('');
+      return `<div style="margin:10px 0">${lines}</div>`;
+    }
+    if(b.kind==='markdown') return `<div style="margin:10px 0;font-size:14px">${mdToHtml(c)}</div>`;
+    if(b.kind==='image' && c) return `<img src="${c}" style="max-width:100%;border-radius:8px;margin:10px 0">`;
+    if(b.kind==='drawing' && c) return `<img src="${c}" style="max-width:100%;border-radius:8px;margin:10px 0">`;
+    if(b.kind==='audio') return `<div style="background:${border};padding:10px;border-radius:8px;font-size:13px;color:${text2};margin:10px 0">🎤 audio</div>`;
+    return `<div style="margin:10px 0;line-height:1.6">${c||'&nbsp;'}</div>`;
+  }).join('');
+  const html = `
+    <div xmlns="http://www.w3.org/1999/xhtml" style="box-sizing:border-box;width:${W}px;background:${bg};color:${text};font-family:${body};padding:${padding}px;font-size:15px;line-height:1.6">
+      <h1 style="font-family:${display};font-weight:600;font-size:30px;margin:0 0 18px;color:${text}">${esc(title)}</h1>
+      <div>${blocksHtml}</div>
+      <div style="margin-top:24px;padding-top:14px;border-top:1px solid ${border};color:${text2};font-size:11px;letter-spacing:0.06em">YEStess · ${new Date().toLocaleDateString()}</div>
+    </div>
+  `;
+  // Measure height
+  const meas = document.createElement('div');
+  meas.innerHTML = html; meas.style.position='absolute'; meas.style.left='-9999px'; meas.style.top='0';
+  document.body.appendChild(meas);
+  const inner = meas.firstElementChild;
+  const H = Math.max(400, inner.offsetHeight + 20);
+  meas.remove();
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}"><foreignObject width="100%" height="100%">${html}</foreignObject></svg>`;
+  const blob = new Blob([svg], {type:'image/svg+xml;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const img = new Image();
+  img.onload = ()=>{
+    const cv = document.createElement('canvas');
+    cv.width=W*2; cv.height=H*2; // 2x retina
+    const ctx = cv.getContext('2d');
+    ctx.scale(2,2);
+    ctx.drawImage(img, 0, 0);
+    cv.toBlob(b=>{
+      const a=document.createElement('a');
+      a.href=URL.createObjectURL(b);
+      a.download=`yestess-${(title||'note').replace(/[^a-z0-9]/gi,'_').toLowerCase()}.png`;
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(a.href);
+      toast(t('toast.pngReady'));
+    }, 'image/png');
+    URL.revokeObjectURL(url);
+  };
+  img.onerror = ()=>{ URL.revokeObjectURL(url); toast(state.cfg.lang==='pl'?'Błąd generowania':'Error'); };
+  img.src = url;
+}
+
 function exportData(){
-  const payload={app:'YEStess',version:3,exportedAt:new Date().toISOString(),cfg:state.cfg,db:state.db};
+  const payload={app:'YEStess',version:4,exportedAt:new Date().toISOString(),cfg:state.cfg,db:state.db};
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
   const url=URL.createObjectURL(blob);
   const d=new Date(),pad=n=>String(n).padStart(2,'0');
@@ -4006,7 +4079,7 @@ function exportData(){
 function exportSingleProject(id){
   closeSheet();
   const p=state.db.projects.find(x=>x.id===id); if(!p) return;
-  const payload={app:'YEStess',version:3,exportedAt:new Date().toISOString(),kind:'project',project:p};
+  const payload={app:'YEStess',version:4,exportedAt:new Date().toISOString(),kind:'project',project:p};
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a'); a.href=url;
