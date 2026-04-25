@@ -759,7 +759,7 @@ pl:{
 'project.addSection':'Dodaj dział','project.empty.title':'Pusty projekt','project.empty.desc':'Dodaj pierwszy dział i pierwszą notatkę.','project.defaultSection':'Notatki',
 'note.untitled':'Bez tytułu','note.empty':'Pusta notatka',
 'exit.title':'Zapisać notatkę?','exit.sub':'Gdzie ma się zapisać ta myśl?','exit.keepInbox':'Zostaw w Inboxie','exit.saveToProject':'Zapisz do projektu',
-'settings.appearance':'Wygląd','settings.theme':'Motyw','settings.language':'Język','settings.echo':'Echo — powroty do notatek','settings.echoHint':'Pokazuj stare notatki do ponownego rozważenia','settings.data':'Dane','settings.export':'Eksportuj dane','settings.exportHint':'Kopia zapasowa JSON','settings.import':'Importuj dane','settings.importHint':'Zastąpi aktualne dane','settings.stats':'Statystyki','settings.projects':'Projekty','settings.sections':'Działy','settings.notes':'Notatki','settings.words':'Słowa','settings.danger':'Strefa niebezpieczna','settings.reset':'Wyczyść wszystko','settings.resetHint':'Usuwa wszystko.',
+'settings.appearance':'Wygląd','settings.theme':'Motyw','settings.language':'Język','settings.echo':'Echo — powroty do notatek','settings.echoHint':'Pokazuj stare notatki do ponownego rozważenia','settings.data':'Dane','settings.export':'Eksportuj dane','settings.exportHint':'Kopia zapasowa JSON','settings.import':'Importuj dane','settings.importHint':'Zastąpi aktualne dane','settings.import.replace':'Zastąp','settings.import.merge':'Scal','settings.import.mergeHint':'Dopisz do istniejących danych','settings.stats':'Statystyki','settings.projects':'Projekty','settings.sections':'Działy','settings.notes':'Notatki','settings.words':'Słowa','settings.danger':'Strefa niebezpieczna','settings.reset':'Wyczyść wszystko','settings.resetHint':'Usuwa wszystko.',
 'sheet.newProject':'Nowy projekt','sheet.newFolder':'Nowy folder','sheet.newSection':'Nowy dział','sheet.editSection':'Edytuj dział','sheet.rename':'Zmień nazwę','sheet.move':'Przenieś','sheet.copy':'Kopiuj','sheet.duplicate':'Duplikuj','sheet.export':'Eksportuj','sheet.delete':'Usuń','sheet.editProject':'Edytuj projekt','sheet.pinToggle':'Przypnij / odepnij','sheet.moveToInbox':'Przenieś do Inboxu','sheet.archive':'Archiwizuj','sheet.unarchive':'Przywróć','sheet.copyText':'Skopiuj tekst','sheet.customBlocks':'Własne typy bloków','sheet.echoes':'Własne echa','sheet.stats':'Statystyki','sheet.find':'Znajdź / zamień','sheet.exportPng':'Zapisz jako obraz','sheet.exportJson':'Zapisz jako JSON','sheet.exportText':'Zapisz jako tekst','sheet.help':'Centrum pomocy','sheet.install':'Zainstaluj na urządzeniu','sheet.font':'Czcionka','sheet.blockOrder':'Kolejność bloków','sheet.hidden':'Ukryty notatnik','sheet.tutorial':'Samouczek',
 'sheet.pickProject':'Do którego projektu?','sheet.pickSection':'Do którego działu?','sheet.moveUp':'W górę','sheet.moveDown':'W dół',
 'block.text':'Tekst','block.heading':'Nagłówek','block.quote':'Cytat','block.code':'Kod','block.image':'Obraz','block.audio':'Audio','block.drawing':'Rysunek','block.check':'Zadania','block.callout':'Wyróżnienie','block.markdown':'Markdown','block.dictation':'Dyktowanie','block.more':'Więcej','block.custom':'Własny',
@@ -805,7 +805,7 @@ en:{
 'project.addSection':'Add section','project.empty.title':'Empty project','project.empty.desc':'Add your first section and first note.','project.defaultSection':'Notes',
 'note.untitled':'Untitled','note.empty':'Empty note',
 'exit.title':'Save this note?','exit.sub':'Where should this thought go?','exit.keepInbox':'Keep in Inbox','exit.saveToProject':'Save to project',
-'settings.appearance':'Appearance','settings.theme':'Theme','settings.language':'Language','settings.echo':'Echo — revisit old notes','settings.echoHint':'Surface old notes for reconsideration','settings.data':'Data','settings.export':'Export data','settings.exportHint':'JSON backup','settings.import':'Import data','settings.importHint':'Will replace current data','settings.stats':'Stats','settings.projects':'Projects','settings.sections':'Sections','settings.notes':'Notes','settings.words':'Words','settings.danger':'Danger zone','settings.reset':'Wipe everything','settings.resetHint':'Removes everything.',
+'settings.appearance':'Appearance','settings.theme':'Theme','settings.language':'Language','settings.echo':'Echo — revisit old notes','settings.echoHint':'Surface old notes for reconsideration','settings.data':'Data','settings.export':'Export data','settings.exportHint':'JSON backup','settings.import':'Import data','settings.importHint':'Will replace current data','settings.import.replace':'Replace','settings.import.merge':'Merge','settings.import.mergeHint':'Append to existing data','settings.stats':'Stats','settings.projects':'Projects','settings.sections':'Sections','settings.notes':'Notes','settings.words':'Words','settings.danger':'Danger zone','settings.reset':'Wipe everything','settings.resetHint':'Removes everything.',
 'sheet.newProject':'New project','sheet.newFolder':'New folder','sheet.newSection':'New section','sheet.editSection':'Edit section','sheet.rename':'Rename','sheet.move':'Move','sheet.copy':'Copy','sheet.duplicate':'Duplicate','sheet.export':'Export','sheet.delete':'Delete','sheet.editProject':'Edit project','sheet.pinToggle':'Pin / unpin','sheet.moveToInbox':'Move to Inbox','sheet.archive':'Archive','sheet.unarchive':'Restore','sheet.copyText':'Copy text','sheet.customBlocks':'Custom block types','sheet.echoes':'Custom echoes','sheet.stats':'Statistics','sheet.find':'Find / replace','sheet.exportPng':'Save as image','sheet.exportJson':'Save as JSON','sheet.exportText':'Save as text','sheet.help':'Help center','sheet.install':'Install on device','sheet.font':'Font','sheet.blockOrder':'Block order','sheet.hidden':'Hidden notebook','sheet.tutorial':'Tutorial',
 'sheet.pickProject':'Which project?','sheet.pickSection':'Which section?','sheet.moveUp':'Move up','sheet.moveDown':'Move down',
 'block.text':'Text','block.heading':'Heading','block.quote':'Quote','block.code':'Code','block.image':'Image','block.audio':'Audio','block.drawing':'Drawing','block.check':'Tasks','block.callout':'Callout','block.markdown':'Markdown','block.dictation':'Dictation','block.more':'More','block.custom':'Custom',
@@ -3779,6 +3779,9 @@ function renderSettings(){
     + state.db.inbox.reduce((s,n)=>s+n.blocks.reduce((x,b)=>x+wc(b.content||''),0),0)
     + state.db.archive.reduce((s,n)=>s+n.blocks.reduce((x,b)=>x+wc(b.content||''),0),0);
 
+  const fontObj = FONTS.find(f=>f.id===(state.cfg.font||'serif-paper'));
+  const totalTime = fmtDuration(state.cfg.totalSessionMs||0);
+
   c.innerHTML=`
     <div class="settings-section-title">${esc(t('settings.appearance'))}</div>
     <div class="settings-section">
@@ -3786,14 +3789,26 @@ function renderSettings(){
         <div class="settings-row-main"><div class="settings-label">${esc(t('settings.theme'))}</div><div class="settings-hint">${esc(themeLabel)} · ${esc(mode)}</div></div>
         <div class="settings-chev">${SVG.chevR}</div>
       </button>
+      <button class="settings-row" onclick="openFontSettings()">
+        <div class="settings-row-main"><div class="settings-label">${esc(t('font.label'))}</div><div class="settings-hint">${esc(fontObj?fontObj.label:'')}</div></div>
+        <div class="settings-chev">${SVG.chevR}</div>
+      </button>
       <button class="settings-row" onclick="openLangSettings()">
         <div class="settings-row-main"><div class="settings-label">${esc(t('settings.language'))}</div><div class="settings-hint">${esc(lang)}</div></div>
         <div class="settings-chev">${SVG.chevR}</div>
       </button>
-      <div class="settings-row" onclick="toggleEcho()">
-        <div class="settings-row-main"><div class="settings-label">${esc(t('settings.echo'))}</div><div class="settings-hint">${esc(t('settings.echoHint'))}</div></div>
-        <div class="settings-toggle ${state.cfg.echoEnabled?'on':''}"></div>
-      </div>
+      <button class="settings-row" onclick="openBlockOrderSettings()">
+        <div class="settings-row-main"><div class="settings-label">${esc(t('blockOrder.title'))}</div><div class="settings-hint">${esc(t('blockOrder.desc'))}</div></div>
+        <div class="settings-chev">${SVG.chevR}</div>
+      </button>
+    </div>
+
+    <div class="settings-section-title">${esc(t('sheet.echoes'))}</div>
+    <div class="settings-section">
+      <button class="settings-row" onclick="openEchoManager()">
+        <div class="settings-row-main"><div class="settings-label">${esc(t('settings.echo'))}</div><div class="settings-hint">${esc(state.cfg.echoEnabled?t('settings.echoHint'):'wył.')}</div></div>
+        <div class="settings-chev">${SVG.chevR}</div>
+      </button>
     </div>
 
     <div class="settings-section-title">${esc(t('settings.data'))}</div>
@@ -3802,9 +3817,21 @@ function renderSettings(){
         <div class="settings-row-main"><div class="settings-label">${esc(t('settings.export'))}</div><div class="settings-hint">${esc(t('settings.exportHint'))}</div></div>
         <div class="settings-chev">${SVG.download}</div>
       </button>
-      <button class="settings-row" onclick="importFromFile()">
-        <div class="settings-row-main"><div class="settings-label">${esc(t('settings.import'))}</div><div class="settings-hint">${esc(t('settings.importHint'))}</div></div>
+      <button class="settings-row" onclick="importFromFile(false)">
+        <div class="settings-row-main"><div class="settings-label">${esc(t('settings.import'))} — ${esc(t('settings.import.replace'))}</div><div class="settings-hint">${esc(t('settings.importHint'))}</div></div>
         <div class="settings-chev">${SVG.upload}</div>
+      </button>
+      <button class="settings-row" onclick="importFromFile(true)">
+        <div class="settings-row-main"><div class="settings-label">${esc(t('settings.import'))} — ${esc(t('settings.import.merge'))}</div><div class="settings-hint">${esc(t('settings.import.mergeHint'))}</div></div>
+        <div class="settings-chev">${SVG.upload}</div>
+      </button>
+    </div>
+
+    <div class="settings-section-title">${esc(t('sheet.hidden'))}</div>
+    <div class="settings-section">
+      <button class="settings-row" onclick="openHiddenNotebook()">
+        <div class="settings-row-main"><div class="settings-label">${esc(t('hidden.title'))}</div><div class="settings-hint">${state.cfg.hidden && state.cfg.hidden.enabled?'aktywny · 3s hold':'wyłączony'}</div></div>
+        <div class="settings-chev">${SVG.chevR}</div>
       </button>
     </div>
 
@@ -3814,6 +3841,23 @@ function renderSettings(){
       <div class="settings-row"><div class="settings-row-main"><div class="settings-label">${esc(t('settings.sections'))}</div></div><div class="settings-value">${ts}</div></div>
       <div class="settings-row"><div class="settings-row-main"><div class="settings-label">${esc(t('settings.notes'))}</div></div><div class="settings-value">${tn}</div></div>
       <div class="settings-row"><div class="settings-row-main"><div class="settings-label">${esc(t('settings.words'))}</div></div><div class="settings-value">${tw}</div></div>
+      <div class="settings-row"><div class="settings-row-main"><div class="settings-label">${esc(t('stats.totalTime'))}</div></div><div class="settings-value" style="font-size:12px">${totalTime}</div></div>
+    </div>
+
+    <div class="settings-section-title">${esc(t('help.title'))}</div>
+    <div class="settings-section">
+      <button class="settings-row" onclick="openHelp()">
+        <div class="settings-row-main"><div class="settings-label">${esc(t('help.title'))}</div><div class="settings-hint">${esc(t('help.desc'))}</div></div>
+        <div class="settings-chev">${SVG.chevR}</div>
+      </button>
+      <button class="settings-row" onclick="replayTutorial()">
+        <div class="settings-row-main"><div class="settings-label">${esc(t('sheet.tutorial'))}</div><div class="settings-hint">${state.cfg.tutorialSeen?'obejrzyj ponownie':'zacznij'}</div></div>
+        <div class="settings-chev">${SVG.chevR}</div>
+      </button>
+      <button class="settings-row" onclick="openInstallPrompt()">
+        <div class="settings-row-main"><div class="settings-label">${esc(t('install.title'))}</div><div class="settings-hint">${esc(t('install.desc'))}</div></div>
+        <div class="settings-chev">${SVG.chevR}</div>
+      </button>
     </div>
 
     <div class="settings-section-title">${esc(t('settings.danger'))}</div>
@@ -3824,9 +3868,76 @@ function renderSettings(){
       </button>
     </div>
 
-    <div style="text-align:center;color:var(--text3);font-size:11px;margin:24px 0 16px;letter-spacing:0.05em;">YEStess · 1.0</div>
+    <div style="text-align:center;color:var(--text3);font-size:11px;margin:24px 0 16px;letter-spacing:0.05em;">YEStess · 2.0</div>
   `;
 }
+
+function openFontSettings(){
+  const html = '<div class="stack">' + FONTS.map(f=>`
+    <button class="action-row" data-font="${f.id}">
+      <span class="action-row-label" style="font-family:${f.display}">${esc(f.label)}</span>
+      ${state.cfg.font===f.id?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>':''}
+    </button>
+  `).join('') + '</div>';
+  openSheet(t('font.picker.title'), html);
+  setTimeout(()=>{
+    document.querySelectorAll('.sheet-body [data-font]').forEach(b=>{
+      b.onclick=()=>{ state.cfg.font=b.dataset.font; saveCfg(); applyFont(); closeSheet(); renderSettings(); toast(t('toast.saved')); };
+    });
+  }, 80);
+}
+
+function openBlockOrderSettings(){
+  const order = state.cfg.blockOrder || ['text','heading','check','quote','callout','code','markdown','image','audio','drawing','dictation'];
+  const html = `
+    <div style="font-size:13px;color:var(--text2);margin-bottom:10px">${esc(t('blockOrder.desc'))}</div>
+    <div id="bordList" class="stack">${order.map((k,i)=>`
+      <div class="action-row" data-bord-idx="${i}" style="cursor:default">
+        <button class="drag-handle" data-drag><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg></button>
+        <span class="action-row-label">${esc(t('block.'+k))}</span>
+      </div>
+    `).join('')}</div>
+    <button class="btn btn-ghost" id="bordReset" style="width:100%;margin-top:10px">Reset</button>
+  `;
+  openSheet(t('blockOrder.title'), html);
+  setTimeout(()=>{
+    document.querySelectorAll('#bordList [data-bord-idx]').forEach(row=>{
+      attachReorderDrag(row, '[data-bord-idx]', (fromIdx, toIdx)=>{
+        const o = [...order];
+        const [mv]=o.splice(fromIdx,1); o.splice(toIdx,0,mv);
+        state.cfg.blockOrder=o; saveCfg();
+        openBlockOrderSettings();
+      });
+    });
+    document.getElementById('bordReset').onclick = ()=>{
+      state.cfg.blockOrder=['text','heading','check','quote','callout','code','markdown','image','audio','drawing','dictation'];
+      saveCfg(); openBlockOrderSettings();
+    };
+  }, 80);
+}
+
+function openInstallPrompt(){
+  openSheet(t('install.title'), `
+    <div style="font-size:13px;color:var(--text2);margin-bottom:10px">${esc(t('install.desc'))}</div>
+    <button class="btn btn-primary" id="pwaInstallBtn" style="width:100%">${esc(t('install.prompt'))}</button>
+    <div style="font-size:12px;color:var(--text3);margin-top:10px">${esc(t('install.manual'))}</div>
+  `);
+  setTimeout(()=>{
+    const btn=document.getElementById('pwaInstallBtn');
+    btn.onclick = async ()=>{
+      if(window.__deferredPrompt){
+        window.__deferredPrompt.prompt();
+        const choice = await window.__deferredPrompt.userChoice;
+        if(choice.outcome==='accepted'){ closeSheet(); toast(t('toast.installAdded')); }
+        window.__deferredPrompt=null;
+      } else {
+        toast(t('toast.installUnavailable'));
+      }
+    };
+    if(!window.__deferredPrompt){ btn.style.opacity='0.5'; }
+  }, 80);
+}
+window.addEventListener('beforeinstallprompt', e=>{ e.preventDefault(); window.__deferredPrompt=e; });
 function toggleEcho(){ state.cfg.echoEnabled = !state.cfg.echoEnabled; saveCfg(); renderSettings(); }
 
 function openThemeSettings(){
@@ -3904,7 +4015,7 @@ function exportSingleProject(id){
   URL.revokeObjectURL(url);
   toast(t('toast.exported'));
 }
-function importFromFile(){
+function importFromFile(mergeMode){
   const inp=document.getElementById('fileInput'); inp.value='';
   inp.onchange=(e)=>{
     const f=e.target.files[0]; if(!f) return;
@@ -3943,6 +4054,58 @@ function importFromFile(){
           renderCurrentView();
         } else {
           if(!data.db || !data.cfg) throw new Error('bad');
+          if(mergeMode){
+            // Merge: keep existing data, append imported items with new ids
+            if(!state.db) state.db={folders:[],projects:[],inbox:[],archive:[]};
+            const idMap={fid:{}, pid:{}};
+            (data.db.folders||[]).forEach(f=>{
+              const newF={...f, id:uid('f')};
+              idMap.fid[f.id]=newF.id;
+              state.db.folders.push(newF);
+            });
+            (data.db.projects||[]).forEach(p=>{
+              const clone=JSON.parse(JSON.stringify(p));
+              const oldPid=clone.id;
+              clone.id=uid('p');
+              idMap.pid[oldPid]=clone.id;
+              if(clone.folderId && idMap.fid[clone.folderId]) clone.folderId=idMap.fid[clone.folderId];
+              if(!clone.sections && clone.chapters){
+                clone.sections=[]; clone.notes=[];
+                (clone.chapters||[]).forEach((ch,i)=>{
+                  const sid=uid('s');
+                  clone.sections.push({id:sid,name:ch.title||'Section',order:i});
+                  (ch.notes||[]).forEach(n=>{ n.sectionId=sid; clone.notes.push(n); });
+                });
+                delete clone.chapters;
+                clone.sectionLabel=clone.chapterLabel||t('label.chapters');
+                delete clone.chapterLabel;
+              }
+              const sm={};
+              (clone.sections||[]).forEach(s=>{ const ni=uid('s'); sm[s.id]=ni; s.id=ni; });
+              (clone.notes||[]).forEach(n=>{
+                n.id=uid('n');
+                if(n.sectionId && sm[n.sectionId]) n.sectionId=sm[n.sectionId];
+                (n.blocks||[]).forEach(b=>b.id=uid('b'));
+              });
+              if(clone.customBlockKinds) clone.customBlockKinds.forEach(k=>k.id=uid('ck'));
+              state.db.projects.push(clone);
+            });
+            (data.db.inbox||[]).forEach(n=>{
+              const c=JSON.parse(JSON.stringify(n)); c.id=uid('n');
+              (c.blocks||[]).forEach(b=>b.id=uid('b'));
+              state.db.inbox.unshift(c);
+            });
+            (data.db.archive||[]).forEach(n=>{
+              const c=JSON.parse(JSON.stringify(n)); c.id=uid('n');
+              (c.blocks||[]).forEach(b=>b.id=uid('b'));
+              state.db.archive.unshift(c);
+            });
+            upgradeDbToV4();
+            saveDb();
+            renderCurrentView();
+            toast(t('toast.merged'));
+            return;
+          }
           if(!confirm(t('confirm.import'))) return;
           state.cfg=data.cfg; state.db=data.db;
           if(!state.db.inbox) state.db.inbox=[];
