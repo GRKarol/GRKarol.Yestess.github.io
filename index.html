@@ -233,13 +233,17 @@ svg{display:block;flex-shrink:0;}
 .proj-section-bar.dragging{opacity:0.4;}
 .proj-section-bar.drag-over-top{box-shadow:0 -2px 0 0 var(--accent);}
 .proj-section-bar.drag-over-bottom{box-shadow:0 2px 0 0 var(--accent);}
+.recently-edited-bar{display:flex;align-items:center;gap:8px;margin:6px 0 8px;padding:0 2px;}
+.recently-edited-label{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);opacity:0.85;white-space:nowrap;}
+.recently-edited-line{flex:1;height:1px;background:var(--accent-b);}
+.note-card.recently-edited-card{border-left:3px solid var(--accent);}
 
 .note-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-bottom:8px;transition:var(--trans);border-left:3px solid var(--border2);}
 .note-card:active{background:var(--surface2);transform:scale(0.99);}
 .note-card.pinned,.inbox-card.pinned,.archive-card.pinned{border-left-color:var(--amber);}
 .pin-mark{color:var(--amber);font-size:0.9em;}
 body.kbd-open .bottom-nav{display:none;}
-body.kbd-open .editor-fmt-bar{bottom:calc(var(--kbd,0px) + 6px);}
+body.kbd-open .fmt-bar{bottom:calc(var(--kbd,0px) + 6px);}
 .note-title{font-family:var(--display);font-size:16px;font-weight:500;line-height:1.3;margin-bottom:4px;}
 .note-preview{font-size:13px;color:var(--text2);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
 .note-meta{font-size:11px;color:var(--text3);margin-top:6px;display:flex;gap:8px;align-items:center;}
@@ -352,8 +356,9 @@ body.kbd-open .editor-fmt-bar{bottom:calc(var(--kbd,0px) + 6px);}
 .action-row svg{width:18px;height:18px;flex-shrink:0;}
 .action-row-label{font-size:15px;font-weight:500;flex:1;}
 
-.toast{position:fixed;bottom:calc(94px + var(--safe-bot));left:50%;transform:translate(-50%,120%);background:var(--text);color:var(--bg);padding:11px 18px;border-radius:24px;font-size:13px;font-weight:500;z-index:200;transition:transform 0.35s cubic-bezier(0.2,0.8,0.2,1);box-shadow:var(--shadow-l);pointer-events:none;max-width:calc(100% - 32px);text-align:center;}
-.toast.show{transform:translate(-50%,0);}
+.toast{display:none;position:fixed;bottom:calc(94px + var(--safe-bot));left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:11px 18px;border-radius:24px;font-size:13px;font-weight:500;z-index:200;box-shadow:var(--shadow-l);pointer-events:none;max-width:calc(100% - 32px);text-align:center;}
+.toast.show{display:block;animation:toastIn 0.3s cubic-bezier(0.2,0.8,0.2,1);}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(10px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
 
 .search-bar{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface);border:1.5px solid var(--border);border-radius:24px;margin-bottom:14px;}
 .search-bar svg{color:var(--text3);width:18px;height:18px;flex-shrink:0;}
@@ -368,6 +373,19 @@ body.kbd-open .editor-fmt-bar{bottom:calc(var(--kbd,0px) + 6px);}
 
 #drawModal{display:none;position:fixed;inset:0;background:var(--bg);z-index:120;flex-direction:column;padding-top:var(--safe-top);padding-bottom:var(--safe-bot);}
 #drawModal.active{display:flex;}
+#translateModal{display:none;position:fixed;inset:0;background:var(--bg);z-index:120;flex-direction:column;padding-top:var(--safe-top);padding-bottom:var(--safe-bot);}
+#translateModal.active{display:flex;}
+.translate-header{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--border);min-height:52px;}
+.translate-header-title{font-family:var(--display);font-size:17px;font-weight:500;flex:1;}
+.translate-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px;}
+.translate-preview-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px;margin-bottom:10px;}
+.translate-preview-orig{font-size:13px;color:var(--text2);margin-bottom:6px;line-height:1.5;}
+.translate-preview-arrow{font-size:12px;color:var(--text3);margin-bottom:6px;}
+.translate-preview-new{font-size:14px;color:var(--text);line-height:1.55;font-weight:500;}
+.translate-footer{display:flex;gap:10px;padding:12px 14px calc(12px + var(--safe-bot));border-top:1px solid var(--border);}
+.lang-chip{padding:10px 16px;background:var(--surface);border:1.5px solid var(--border);border-radius:20px;font-size:14px;font-family:inherit;color:var(--text);transition:var(--trans);display:inline-flex;align-items:center;gap:6px;margin:4px;}
+.lang-chip:active{background:var(--surface2);transform:scale(0.96);}
+.lang-grid{display:flex;flex-wrap:wrap;padding:8px 2px;}
 .draw-toolbar{display:flex;gap:8px;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center;flex-wrap:wrap;}
 .draw-canvas-wrap{flex:1;overflow:hidden;background:white;position:relative;}
 #drawCanvas{display:block;touch-action:none;background:white;}
@@ -453,8 +471,11 @@ mark.find-hit.cur{outline:2px solid var(--accent);}
 .hidden-entry-meta{font-size:11px;color:var(--text3);}
 
 /* === Dictation block === */
+.dictation-block-wrap{position:relative;padding-right:44px;}
 .dictation-block .block-content{min-height:60px;padding:6px 0;}
-.dictation-block .btn-ghost{justify-content:center;}
+.dictation-mic-btn{position:absolute;top:4px;right:4px;width:34px;height:34px;padding:7px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text2);display:flex;align-items:center;justify-content:center;transition:var(--trans);cursor:pointer;}
+.dictation-mic-btn.active{background:var(--accent);color:var(--accent-text);border-color:var(--accent);}
+.dictation-mic-btn svg{width:18px;height:18px;}
 
 /* === Drag handle for reorderable items === */
 .drag-handle{width:22px;height:22px;display:flex;align-items:center;justify-content:center;color:var(--text3);cursor:grab;flex-shrink:0;touch-action:none;}
@@ -614,7 +635,7 @@ mark.find-hit.cur{outline:2px solid var(--accent);}
     <div class="view" id="viewSearch">
       <div class="search-bar">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input id="searchInput" autocomplete="off">
+        <input id="searchInput" type="search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" name="yestess-search-q">
       </div>
       <div id="searchResults"></div>
     </div>
@@ -661,6 +682,18 @@ mark.find-hit.cur{outline:2px solid var(--accent);}
     <button class="btn-icon" onclick="saveDrawing()" style="background:var(--accent);color:var(--accent-text)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></button>
   </div>
   <div class="draw-canvas-wrap"><canvas id="drawCanvas"></canvas></div>
+</div>
+
+<div id="translateModal">
+  <div class="translate-header">
+    <button class="btn-icon" onclick="closeTranslateModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="translate-header-title" id="translateTitle"></div>
+  </div>
+  <div class="translate-body" id="translateBody"></div>
+  <div class="translate-footer">
+    <button class="btn btn-ghost" data-save-copy style="flex:1"></button>
+    <button class="btn btn-primary" data-save-orig style="flex:1"></button>
+  </div>
 </div>
 
 <div class="sheet-backdrop" id="sheetBackdrop" onclick="closeSheet()"></div>
@@ -769,6 +802,9 @@ pl:{
 'stats.pinned':'Przypięte','stats.totalTime':'Całkowity czas','stats.sessions':'Sesje','stats.createdAt':'Utworzono','stats.updatedAt':'Zaktualizowano','stats.chars':'Znaki','stats.blocks':'Bloki','stats.opens':'Otwarć','stats.currentSession':'Ta sesja',
 'echo.manager.title':'Własne echa','echo.manager.desc':'Spersonalizowane powroty do notatek. Notatka trafi do echa gdy spełni te kryteria.','echo.daysOld':'Dni od ostatniego otwarcia','echo.minWords':'Min. słów','echo.minOpens':'Min. otwarć','echo.enabled':'Echo aktywne','echo.add':'Dodaj regułę','echo.label':'Nazwa','echo.default':'Domyślne echo (14 dni · 30 słów · 2 otwarcia)',
 'font.label':'Czcionka','font.picker.title':'Wybierz czcionkę','blockOrder.title':'Kolejność typów bloków','blockOrder.desc':'Przeciągnij, aby zmienić kolejność w pasku dodawania bloku.',
+'splash.tagline':'Notes on another level',
+'sheet.translate':'Przetłumacz notatkę','translate.pickLang':'Wybierz język docelowy','translate.preview':'Podgląd tłumaczenia','translate.saveOrig':'Zastąp oryginał','translate.saveCopy':'Zapisz jako kopię','translate.working':'Tłumaczę...','translate.error':'Błąd tłumaczenia',
+'project.recentlyEdited':'Ostatnio edytowana',
 'hidden.title':'Ukryty notatnik','hidden.desc':'Aby otworzyć, przytrzymaj palec na logo YEStess w nagłówku przez 3 sekundy. Dane szyfrowane AES-GCM z hasłem PBKDF2.','hidden.enable':'Aktywuj ukryty notatnik','hidden.setPassword':'Ustal hasło','hidden.unlock':'Odblokuj','hidden.lock':'Zablokuj','hidden.entries':'Wpisy','hidden.newEntry':'Nowy wpis','hidden.changePassword':'Zmień hasło','hidden.disable':'Wyłącz (usuwa dane!)',
 'install.title':'Zainstaluj aplikację','install.desc':'YEStess to PWA — możesz ją zainstalować jak normalną aplikację.','install.prompt':'Zainstaluj','install.manual':'Na iOS / innych: menu przeglądarki → „Dodaj do ekranu głównego".',
 'help.title':'Centrum pomocy','help.desc':'Wyjaśnienia funkcji i skróty.',
@@ -815,6 +851,9 @@ en:{
 'stats.pinned':'Pinned','stats.totalTime':'Total time','stats.sessions':'Sessions','stats.createdAt':'Created','stats.updatedAt':'Updated','stats.chars':'Chars','stats.blocks':'Blocks','stats.opens':'Opens','stats.currentSession':'This session',
 'echo.manager.title':'Custom echoes','echo.manager.desc':'Personalized note revisits.','echo.daysOld':'Days since last opened','echo.minWords':'Min. words','echo.minOpens':'Min. opens','echo.enabled':'Echo enabled','echo.add':'Add rule','echo.label':'Name','echo.default':'Default echo (14 days · 30 words · 2 opens)',
 'font.label':'Font','font.picker.title':'Choose font','blockOrder.title':'Block type order','blockOrder.desc':'Drag to reorder the add-block bar.',
+'splash.tagline':'Notes on another level',
+'sheet.translate':'Translate note','translate.pickLang':'Pick target language','translate.preview':'Translation preview','translate.saveOrig':'Replace original','translate.saveCopy':'Save as copy','translate.working':'Translating...','translate.error':'Translation error',
+'project.recentlyEdited':'Recently edited',
 'hidden.title':'Hidden notebook','hidden.desc':'Press and hold YEStess logo for 3 seconds to open. Data encrypted with AES-GCM / PBKDF2.','hidden.enable':'Enable hidden notebook','hidden.setPassword':'Set password','hidden.unlock':'Unlock','hidden.lock':'Lock','hidden.entries':'Entries','hidden.newEntry':'New entry','hidden.changePassword':'Change password','hidden.disable':'Disable (deletes data!)',
 'install.title':'Install app','install.desc':'YEStess is a PWA — install it like a normal app.','install.prompt':'Install','install.manual':'On iOS / others: browser menu → "Add to Home Screen".',
 'help.title':'Help center','help.desc':'Feature explanations and shortcuts.',
@@ -1659,6 +1698,7 @@ function headerRightAction(){
     openSheet('', actionList([
       {icon:SVG.star, label:t('sheet.pinToggle'), on:togglePinNote},
       {icon:SVG.search, label:t('sheet.find'), on:()=>{ closeSheet(); openFind(); }},
+      {icon:SVG.layers, label:t('sheet.translate'), on:()=>{ closeSheet(); openTranslateUI(); }},
       {icon:SVG.refresh, label:t('sheet.stats'), on:openNoteStats},
       {icon:SVG.copy, label:t('sheet.duplicate'), on:duplicateCurrentNote, hide:origin==='inbox'||origin==='archive'},
       {icon:SVG.image, label:t('sheet.exportPng'), on:()=>exportNoteAsPng(getNote()), hide:origin==='inbox'||origin==='archive'},
@@ -2034,6 +2074,20 @@ function renderProject(){
     return;
   }
 
+  // Recently edited: find note with highest updatedAt across all sections
+  if(p.notes.length > 1){
+    const recentNote = p.notes.reduce((best, n) => (n.updatedAt||0) > (best.updatedAt||0) ? n : best, p.notes[0]);
+    if(recentNote){
+      const reBar=document.createElement('div');
+      reBar.className='recently-edited-bar';
+      reBar.innerHTML=`<div class="recently-edited-label">${esc(t('project.recentlyEdited'))}</div><div class="recently-edited-line"></div>`;
+      c.appendChild(reBar);
+      const card=makeNoteCard(recentNote,'project');
+      card.classList.add('recently-edited-card');
+      c.appendChild(card);
+    }
+  }
+
   sections.forEach(sec=>{
     // section bar
     const bar=document.createElement('div');
@@ -2043,11 +2097,11 @@ function renderProject(){
     attachSectionDrag(bar, sec.id);
     c.appendChild(bar);
 
-    // notes in this section
+    // notes in this section — sorted by creation date, pinned first
     const notes = p.notes.filter(n=>n.sectionId===sec.id);
     const sorted = [...notes].sort((a,b)=>{
       if(!!b.pinned !== !!a.pinned) return (b.pinned?1:0)-(a.pinned?1:0);
-      return (b.updatedAt||0)-(a.updatedAt||0);
+      return (b.createdAt||0)-(a.createdAt||0);
     });
     sorted.forEach(n=>c.appendChild(makeNoteCard(n, 'project')));
   });
@@ -2797,6 +2851,11 @@ function addBlock(kind, note, customKindId){
   note.updatedAt=Date.now();
   saveDb();
   renderEditor();
+  // Scroll new block into center of screen so it's not hidden below the fold
+  setTimeout(()=>{
+    const newEl=document.querySelector(`#blocksContainer .block[data-id="${b.id}"]`);
+    if(newEl) newEl.scrollIntoView({behavior:'smooth', block:'center'});
+  }, 80);
   if(kind==='image') triggerImagePick(b.id);
   else if(kind==='drawing') openDraw(b.id);
   else {
@@ -2804,7 +2863,7 @@ function addBlock(kind, note, customKindId){
       const blocks=document.querySelectorAll('#blocksContainer .block-content');
       const last=blocks[blocks.length-1];
       if(last) last.focus();
-    }, 50);
+    }, 100);
   }
 }
 
@@ -3120,6 +3179,8 @@ function parseCodeContent(raw){
 function renderDictationBlock(block, note){
   const wrap=document.createElement('div');
   wrap.className='dictation-block';
+  const container=document.createElement('div');
+  container.className='dictation-block-wrap';
   const ce=document.createElement('div');
   ce.className='block-content';
   ce.setAttribute('contenteditable','true');
@@ -3127,42 +3188,45 @@ function renderDictationBlock(block, note){
   ce.innerHTML = block.content || '';
   attachContentEditable(ce, block, note);
   const btn=document.createElement('button');
-  btn.className='btn btn-ghost';
-  btn.style.width='100%';
-  btn.style.marginTop='6px';
-  btn.innerHTML = `${SVG.mic}<span>${esc(t('block.dictation.start'))}</span>`;
+  btn.className='dictation-mic-btn';
+  btn.title=t('block.dictation.start');
+  btn.innerHTML=SVG.mic;
   let rec=null;
   btn.onclick=()=>{
     if(rec){
       try{ rec.stop(); }catch(e){}
       rec=null;
-      btn.innerHTML = `${SVG.mic}<span>${esc(t('block.dictation.start'))}</span>`;
+      btn.classList.remove('active');
+      btn.title=t('block.dictation.start');
       return;
     }
     const sr=getSR(); if(!sr){ toast(t('toast.voiceErr')); return; }
     sr.lang = state.cfg.lang==='en' ? 'en-US' : 'pl-PL';
     sr.continuous=true; sr.interimResults=true;
-    let finalText = block.content ? plainText(block.content) : '';
     sr.onresult = (e)=>{
-      let interim=''; let finalBatch='';
-      for(let i=e.resultIndex; i<e.results.length; i++){
-        const tr = e.results[i][0].transcript;
-        if(e.results[i].isFinal) finalBatch += tr+' '; else interim += tr;
+      let final='', interim='';
+      for(let i=0; i<e.results.length; i++){
+        if(e.results[i].isFinal) final += e.results[i][0].transcript+' ';
+        else interim += e.results[i][0].transcript;
       }
-      if(finalBatch){ finalText = (finalText?finalText+' ':'') + finalBatch; }
-      ce.innerHTML = esc(finalText) + (interim?`<span style="opacity:0.5">${esc(interim)}</span>`:'');
+      ce.innerHTML = esc(final.trimEnd()) + (interim?`<span style="opacity:0.5"> ${esc(interim)}</span>`:'');
       block.content = ce.innerHTML; note.updatedAt=Date.now(); saveDb();
     };
-    sr.onerror=()=>toast(t('toast.voiceErr'));
+    sr.onerror=()=>{ toast(t('toast.voiceErr')); };
     sr.onend=()=>{
       rec=null;
-      btn.innerHTML = `${SVG.mic}<span>${esc(t('block.dictation.start'))}</span>`;
+      btn.classList.remove('active');
+      btn.title=t('block.dictation.start');
     };
-    try{ sr.start(); rec=sr; btn.innerHTML = `${SVG.mic}<span>${esc(t('block.dictation.stop'))}</span>`; toast(t('toast.voiceStart')); }
-    catch(e){ toast(t('toast.voiceErr')); }
+    try{
+      sr.start(); rec=sr;
+      btn.classList.add('active');
+      btn.title=t('block.dictation.stop');
+    }catch(e){ toast(t('toast.voiceErr')); }
   };
-  wrap.appendChild(ce);
-  wrap.appendChild(btn);
+  container.appendChild(ce);
+  container.appendChild(btn);
+  wrap.appendChild(container);
   return wrap;
 }
 function serializeCheckBlock(container){
@@ -3219,9 +3283,10 @@ function attachContentEditable(ce, block, note){
     note.updatedAt=Date.now(); saveDb();
   });
   ce.addEventListener('focus', ()=>{ ce.closest('.block').classList.add('focused'); showFmtBar(ce); });
+  ce.addEventListener('touchstart', ()=>{ if(!document.getElementById('fmtBar').classList.contains('show')) showFmtBar(ce); }, {passive:true});
   ce.addEventListener('blur', ()=>{
     ce.closest('.block').classList.remove('focused');
-    setTimeout(()=>{ if(!document.activeElement?.closest?.('.block-content')) hideFmtBar(); }, 200);
+    setTimeout(()=>{ if(!document.activeElement?.closest?.('.block-content')) hideFmtBar(); }, 400);
   });
 }
 
@@ -3342,10 +3407,8 @@ function renderAudioBlock(block, note){
     wrap.innerHTML = `
       <div class="audio-row">
         <button class="audio-rec-btn" data-startrec style="flex:1">${SVG.mic}<span>${state.cfg.lang==='pl'?'Nagraj':'Record'}</span></button>
-        <button class="btn btn-ghost" data-dictate style="flex:1;min-height:40px;padding:8px 12px">${SVG.mic}<span>${state.cfg.lang==='pl'?'Dyktuj':'Dictate'}</span></button>
       </div>`;
     wrap.querySelector('[data-startrec]').onclick = ()=>startAudioRecording(block.id);
-    wrap.querySelector('[data-dictate]').onclick = ()=>startDictation(block.id);
   }
   return wrap;
 }
@@ -4223,7 +4286,9 @@ function resetEverything(){
 /* ═══ SHEET / TOAST ═══ */
 function openSheet(title, bodyHtml){
   document.getElementById('sheetTitle').textContent = title||'';
-  document.getElementById('sheetBody').innerHTML = bodyHtml;
+  const sb=document.getElementById('sheetBody');
+  if(bodyHtml instanceof Node){ sb.innerHTML=''; sb.appendChild(bodyHtml); }
+  else sb.innerHTML = bodyHtml;
   document.getElementById('sheetBackdrop').classList.add('open');
   document.getElementById('sheet').classList.add('open');
 }
@@ -4293,6 +4358,94 @@ function helpContent(topic){
   `;
   return all;
 }
+/* ═══ TRANSLATION ═══ */
+const TRANSLATE_LANGS=[
+  {code:'en',name:'English',flag:'🇬🇧'},
+  {code:'pl',name:'Polski',flag:'🇵🇱'},
+  {code:'de',name:'Deutsch',flag:'🇩🇪'},
+  {code:'fr',name:'Français',flag:'🇫🇷'},
+  {code:'es',name:'Español',flag:'🇪🇸'},
+  {code:'it',name:'Italiano',flag:'🇮🇹'},
+  {code:'pt',name:'Português',flag:'🇵🇹'},
+  {code:'ru',name:'Русский',flag:'🇷🇺'},
+  {code:'uk',name:'Українська',flag:'🇺🇦'},
+  {code:'cs',name:'Čeština',flag:'🇨🇿'},
+  {code:'nl',name:'Nederlands',flag:'🇳🇱'},
+  {code:'ja',name:'日本語',flag:'🇯🇵'},
+  {code:'zh',name:'中文',flag:'🇨🇳'},
+];
+function openTranslateUI(){
+  const src=state.cfg.lang==='pl'?'pl':'en';
+  const body=document.createElement('div');
+  body.className='lang-grid';
+  TRANSLATE_LANGS.filter(l=>l.code!==src).forEach(l=>{
+    const btn=document.createElement('button');
+    btn.className='lang-chip';
+    btn.innerHTML=`${l.flag} ${l.name}`;
+    btn.onclick=()=>{ closeSheet(); translateNoteToLang(l.code, src); };
+    body.appendChild(btn);
+  });
+  openSheet(t('translate.pickLang'), body);
+}
+async function translateNoteToLang(targetLang, srcLang){
+  const note=getNote(); if(!note) return;
+  const blocks=note.blocks.filter(b=>['text','heading','quote','callout'].includes(b.kind) && plainText(b.content||'').trim());
+  if(!blocks.length){ toast(t('translate.error')); return; }
+  toast(t('translate.working'));
+  const results=[];
+  for(const block of blocks){
+    const text=plainText(block.content||'').trim();
+    if(!text){ results.push({id:block.id,original:text,translated:text}); continue; }
+    try{
+      const r=await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text.slice(0,500))}&langpair=${srcLang}|${targetLang}`);
+      const d=await r.json();
+      results.push({id:block.id,original:text,translated:d.responseStatus===200?d.responseData.translatedText:text});
+    }catch(e){ results.push({id:block.id,original:text,translated:text}); }
+  }
+  showTranslatePreview(note, results, targetLang);
+}
+function showTranslatePreview(note, translations, targetLang){
+  const modal=document.getElementById('translateModal');
+  document.getElementById('translateTitle').textContent=t('translate.preview');
+  const body=document.getElementById('translateBody');
+  body.innerHTML='';
+  if(note.title){
+    const h=document.createElement('div');
+    h.style.cssText='font-family:var(--display);font-size:19px;font-weight:500;margin-bottom:14px;';
+    h.textContent=note.title;
+    body.appendChild(h);
+  }
+  translations.forEach(tr=>{
+    const item=document.createElement('div');
+    item.className='translate-preview-item';
+    item.innerHTML=`<div class="translate-preview-orig">${esc(tr.original)}</div><div class="translate-preview-arrow">↓</div><div class="translate-preview-new">${esc(tr.translated)}</div>`;
+    body.appendChild(item);
+  });
+  const footerBtns=modal.querySelectorAll('.translate-footer button');
+  footerBtns[0].textContent=t('translate.saveCopy');
+  footerBtns[1].textContent=t('translate.saveOrig');
+  footerBtns[0].onclick=()=>{
+    const p=getProject(); const n=getNote(); if(!n||!p) return;
+    const copyNote=JSON.parse(JSON.stringify(n));
+    copyNote.id=uid('n'); copyNote.createdAt=Date.now(); copyNote.updatedAt=Date.now();
+    copyNote.title=(n.title||'')+` [${targetLang.toUpperCase()}]`;
+    translations.forEach(tr=>{ const b=copyNote.blocks.find(x=>x.id===tr.id); if(b) b.content=tr.translated; });
+    copyNote.blocks.forEach(b=>{ b.id=uid('b'); });
+    p.notes.push(copyNote); p.updatedAt=Date.now(); saveDb();
+    closeTranslateModal(); toast(t('toast.created'));
+  };
+  footerBtns[1].onclick=()=>{
+    const n=getNote(); if(!n) return;
+    translations.forEach(tr=>{ const b=n.blocks.find(x=>x.id===tr.id); if(b) b.content=tr.translated; });
+    n.updatedAt=Date.now(); saveDb(); renderEditor();
+    closeTranslateModal(); toast(t('toast.saved'));
+  };
+  modal.classList.add('active');
+}
+function closeTranslateModal(){
+  document.getElementById('translateModal').classList.remove('active');
+}
+
 // action list handlers via delegation
 document.addEventListener('click',(e)=>{
   const row=e.target.closest('.sheet-body .action-row');
@@ -4307,9 +4460,13 @@ let toastTimer;
 function toast(msg){
   const tEl=document.getElementById('toast');
   tEl.textContent=msg;
+  tEl.style.display='block';
   tEl.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>tEl.classList.remove('show'), 2200);
+  toastTimer=setTimeout(()=>{
+    tEl.classList.remove('show');
+    setTimeout(()=>{ tEl.style.display='none'; }, 350);
+  }, 1800);
 }
 
 /* ═══ GLOBAL LISTENERS ═══ */
@@ -4323,6 +4480,7 @@ document.addEventListener('keydown', e=>{
     if(document.getElementById('helpModal')?.classList.contains('open')){ closeHelp(); }
     else if(document.getElementById('findBar')?.classList.contains('open')){ closeFind(); }
     else if(document.getElementById('drawModal').classList.contains('active')){ closeDraw(); }
+    else if(document.getElementById('translateModal').classList.contains('active')){ closeTranslateModal(); }
     else if(document.getElementById('sheet').classList.contains('open')){ closeSheet(); }
   }
 });
