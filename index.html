@@ -511,6 +511,37 @@ mark.find-hit.cur{outline:2px solid var(--accent);}
 
 /* === Better empty-state icon === */
 .empty-state .icon svg{stroke:var(--text3);}
+
+/* === Powiększony nagłówek YEStess na głównym === */
+.header-title.brand{font-size:22px;font-weight:600;letter-spacing:0.02em;}
+
+/* === Find/Replace - improved UI === */
+.find-bar{gap:6px;}
+.find-row{gap:5px;flex-wrap:nowrap;}
+.find-row input{border-radius:10px;padding:8px 10px;font-size:14px;}
+.find-btn{border-radius:9px;font-size:13px;white-space:nowrap;padding:8px 10px;}
+.find-info{display:flex;align-items:center;gap:6px;}
+mark.find-hit{background:rgba(201,168,76,0.55);color:var(--text);border-radius:3px;padding:0 1px;outline:none;}
+mark.find-hit.cur{background:var(--amber);color:#1a1916;outline:2px solid var(--accent);border-radius:3px;}
+
+/* === Undo/Redo fmt buttons === */
+.fmt-btn.undo-btn,.fmt-btn.redo-btn{opacity:0.6;font-size:16px;}
+.fmt-btn.undo-btn:not([disabled]),.fmt-btn.redo-btn:not([disabled]){opacity:1;}
+.fmt-btn[disabled]{pointer-events:none;opacity:0.3;}
+
+/* === Note card drag handle === */
+.note-card-wrap{position:relative;display:flex;align-items:stretch;gap:0;margin-bottom:8px;}
+.note-card-wrap .note-card{margin-bottom:0;flex:1;}
+.note-drag-handle{display:flex;align-items:center;padding:0 6px;color:var(--text3);cursor:grab;touch-action:none;flex-shrink:0;opacity:0.5;}
+.note-drag-handle:active{cursor:grabbing;color:var(--accent);opacity:1;}
+.note-drag-handle svg{width:14px;height:14px;}
+.note-card-wrap.drag-over-top{box-shadow:0 -2px 0 0 var(--accent);}
+.note-card-wrap.drag-over-bottom{box-shadow:0 2px 0 0 var(--accent);}
+.note-card-wrap.dragging .note-card{opacity:0.35;}
+
+/* === Reminder badge on note === */
+.note-reminder-badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;color:var(--accent);background:var(--accent-s);padding:2px 6px;border-radius:10px;margin-top:4px;}
+.note-reminder-badge svg{width:10px;height:10px;}
 </style>
 </head>
 <body data-theme="light-paper">
@@ -519,14 +550,10 @@ mark.find-hit.cur{outline:2px solid var(--accent);}
 <div id="splash" class="screen active">
   <svg class="splash-logo" viewBox="0 0 256 256">
     <g transform="translate(128 128)">
-      <circle r="100" fill="none" stroke="var(--accent)" stroke-width="1.5" opacity="0.18"/>
-      <circle r="76"  fill="none" stroke="var(--accent)" stroke-width="1.2" opacity="0.12"/>
-      <path d="M -52 -70 L 0 12 L 52 -70 M 0 12 L 0 78 M -25 78 L 25 78" stroke="var(--accent)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-      <circle cx="0" cy="78" r="8" fill="var(--accent)" opacity="0.55"/>
+      <circle r="104" fill="rgba(0,0,0,0.18)" stroke="rgba(201,168,76,0.22)" stroke-width="1.5"/>
+      <path d="M -54 -72 L 0 12 L 54 -72 M 0 12 L 0 76 M -22 76 L 22 76" stroke="#c9a84c" stroke-width="20" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
     </g>
   </svg>
-  <div class="splash-title">YEStess</div>
-  <div class="splash-sub" data-i18n="splash.tagline">warsztat dla twórców</div>
 </div>
 
 <!-- LANG PICKER -->
@@ -658,6 +685,8 @@ mark.find-hit.cur{outline:2px solid var(--accent);}
     <button class="fmt-btn" data-cmd="strikeThrough" title="Przekreślenie" style="text-decoration:line-through">S</button>
     <button class="fmt-btn" data-cmd="insertUnorderedList" title="Lista punktowana">•</button>
     <button class="fmt-btn" data-cmd="insertOrderedList" title="Lista numerowana">1.</button>
+    <button class="fmt-btn undo-btn" data-cmd="undo" title="Cofnij" id="fmtUndo">↩</button>
+    <button class="fmt-btn redo-btn" data-cmd="redo" title="Ponów" id="fmtRedo">↪</button>
     <button class="fmt-btn" data-cmd="find" title="Znajdź i zamień"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
     <button class="fmt-btn" data-cmd="voice" title="Dyktuj"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></button>
     <button class="fmt-btn" data-cmd="dismiss" title="Schowaj klawiaturę"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="14" rx="2"/><polyline points="8 11 9 11 9 11"/><polyline points="13 11 14 11 14 11"/><polyline points="7 16 17 16"/><polyline points="12 2 12 5"/></svg></button>
@@ -1111,12 +1140,22 @@ function setupVisualViewportGuard(){
   const apply = ()=>{
     const kbd = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
     document.documentElement.style.setProperty('--kbd', kbd+'px');
+    const wasOpen = document.body.classList.contains('kbd-open');
     document.body.classList.toggle('kbd-open', kbd>60);
-    // scroll current selection into view
     if(kbd>60){
       const ae = document.activeElement;
       if(ae && typeof ae.scrollIntoView==='function'){
         setTimeout(()=>{ try{ ae.scrollIntoView({block:'center', behavior:'smooth'}); }catch(e){} }, 120);
+      }
+      // Re-show fmt-bar if a block-content is focused (handles keyboard re-open)
+      if(!wasOpen){
+        const focused = document.activeElement;
+        if(focused && focused.classList && focused.classList.contains('block-content') && !focused.closest('.block[data-kind="code"]') && !focused.closest('.block[data-kind="check"]') && !focused.closest('.block[data-kind="markdown"]')){
+          activeCE = focused;
+          const bar=document.getElementById('fmtBar');
+          bar.classList.add('show');
+          updateFmtBarState();
+        }
       }
     }
   };
@@ -1546,7 +1585,9 @@ const SVG={
   inbox:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>',
   layers:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>',
   refresh:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>',
-  translate:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>'
+  translate:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+  bell:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>',
+  sort:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="9" y2="18"/></svg>'
 };
 
 function enterApp(){
@@ -1554,6 +1595,10 @@ function enterApp(){
   document.getElementById('app-screen').classList.add('active');
   applyTheme(); applyFont(); applyI18n();
   renderCurrentView();
+  scheduleReminderCheck();
+  if(typeof Notification!=='undefined'&&Notification.permission==='default'){
+    Notification.requestPermission().catch(()=>{});
+  }
 }
 function applyTheme(){ document.body.setAttribute('data-theme', state.cfg.theme||'light-paper'); applyThemeColorMeta(); }
 
@@ -1569,6 +1614,7 @@ function switchTab(tab){
 
 function renderCurrentView(){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('headerTitle').classList.remove('brand');
   const fab=document.getElementById('fab');
   const hl=document.getElementById('headerLeft'), hr=document.getElementById('headerRight');
   fab.style.display='flex'; hl.style.visibility='visible'; hr.style.visibility='visible';
@@ -1576,7 +1622,9 @@ function renderCurrentView(){
 
   if(v==='home'){
     document.getElementById('viewHome').classList.add('active');
-    document.getElementById('headerTitle').textContent='YEStess';
+    const htEl=document.getElementById('headerTitle');
+    htEl.textContent='YEStess';
+    htEl.classList.add('brand');
     document.getElementById('headerSub').textContent='';
     hl.innerHTML=SVG.search; hl.onclick=()=>switchTab('search');
     hr.innerHTML=SVG.menu;
@@ -1584,7 +1632,9 @@ function renderCurrentView(){
   } else if(v==='folder'){
     document.getElementById('viewFolder').classList.add('active');
     const f=state.db.folders.find(x=>x.id===state.nav.folderId);
-    document.getElementById('headerTitle').textContent=f?f.name:'';
+    const htEl2=document.getElementById('headerTitle');
+    htEl2.classList.remove('brand');
+    htEl2.textContent=f?f.name:'';
     document.getElementById('headerSub').textContent='';
     hl.innerHTML=SVG.back; hl.onclick=headerLeftAction;
     hr.innerHTML=SVG.menu;
@@ -1683,6 +1733,7 @@ function headerRightAction(){
   ]));
   else if(state.nav.view==='project') openSheet('', actionList([
     {icon:SVG.edit, label:t('sheet.editProject'), on:openProjectEdit},
+    {icon:SVG.sort, label:t('sheet.sortNotes'), on:sortProjectNotes},
     {icon:SVG.layers, label:t('sheet.customBlocks'), on:openCustomBlocksEditor},
     {icon:SVG.refresh, label:t('sheet.echoes'), on:openEchoManager},
     {icon:SVG.star, label:t('sheet.stats'), on:openProjectStats},
@@ -1700,8 +1751,10 @@ function headerRightAction(){
   }
   else if(state.nav.view==='editor'){
     const origin=state.nav.noteOrigin;
+    const pl=state.cfg.lang==='pl';
     openSheet('', actionList([
       {icon:SVG.star, label:t('sheet.pinToggle'), on:togglePinNote},
+      {icon:SVG.bell, label:pl?'Ustaw przypomnienie':'Set reminder', on:openReminderPicker},
       {icon:SVG.search, label:t('sheet.find'), on:()=>{ closeSheet(); openFind(); }},
       {icon:SVG.translate, label:t('sheet.translate'), on:()=>{ closeSheet(); openTranslateUI(); }},
       {icon:SVG.refresh, label:t('sheet.stats'), on:openNoteStats},
@@ -1709,6 +1762,7 @@ function headerRightAction(){
       {icon:SVG.image, label:t('sheet.exportPng'), on:()=>exportNoteAsPng(getNote()), hide:origin==='inbox'||origin==='archive'},
       {icon:SVG.fileText, label:t('sheet.copyText'), on:copyNoteText},
       {icon:SVG.move, label:t('sheet.moveSection'), on:moveNoteToSection, hide:!!(origin==='inbox'||origin==='archive'||!getProject()||!(getProject()?.sections?.length>1))},
+      {icon:SVG.move, label:pl?'Przenieś do innego projektu':'Move to another project', on:moveNoteToProject, hide:origin==='inbox'||origin==='archive'||state.db.projects.filter(pr=>pr.id!==(getProject()?.id)).length===0},
       {icon:SVG.move, label: origin==='inbox' ? t('sheet.move') : (origin==='archive' ? t('sheet.unarchive') : t('sheet.moveToInbox')), on: origin==='inbox'?moveInboxToProject : (origin==='archive'?restoreArchivedNote : moveCurrentNoteToInbox)},
       {icon:SVG.archive, label: origin==='archive' ? t('sheet.unarchive') : t('sheet.archive'), on: origin==='archive' ? restoreArchivedNote : archiveCurrentNote, hide: origin==='archive'},
       {icon:SVG.trash, label:t('sheet.delete'), danger:true, on:promptDeleteNote}
@@ -1835,7 +1889,7 @@ function applyOrder(items, order, key){
 function attachReorderDrag(el, sel, onReorder){
   const handle = el.querySelector('[data-drag]');
   if(!handle) return;
-  let dragging=false, ghost=null, targetIdx=-1, startIdx=-1;
+  let dragging=false, ghost=null, targetIdx=-1, startIdx=-1, dragOffsetY=0;
   const onDown=(e)=>{
     const pt = e.touches?e.touches[0]:e;
     const sibs = [...(el.parentElement?.querySelectorAll(sel)||[])];
@@ -1845,9 +1899,8 @@ function attachReorderDrag(el, sel, onReorder){
     el.classList.add('dragging');
     ghost = el.cloneNode(true);
     const r=el.getBoundingClientRect();
-    ghost.style.position='fixed'; ghost.style.left=r.left+'px'; ghost.style.top=r.top+'px';
-    ghost.style.width=el.offsetWidth+'px'; ghost.style.pointerEvents='none';
-    ghost.style.opacity='0.75'; ghost.style.zIndex='200'; ghost.style.boxShadow='var(--shadow-l)';
+    dragOffsetY = pt.clientY - r.top; // remember where finger is relative to element top
+    ghost.style.cssText=`position:fixed;left:${r.left}px;top:${r.top}px;width:${el.offsetWidth}px;pointer-events:none;opacity:0.75;z-index:200;box-shadow:var(--shadow-l);transition:none;`;
     document.body.appendChild(ghost);
     document.addEventListener('mousemove', onMove);
     document.addEventListener('touchmove', onMove, {passive:false});
@@ -1858,7 +1911,7 @@ function attachReorderDrag(el, sel, onReorder){
   const onMove=(e)=>{
     if(!dragging) return;
     const pt = e.touches?e.touches[0]:e;
-    ghost.style.top=(pt.clientY - el.offsetHeight/2)+'px';
+    ghost.style.top=(pt.clientY - dragOffsetY)+'px';
     const sibs = [...(el.parentElement?.querySelectorAll(sel)||[])];
     sibs.forEach(s=>s.classList.remove('drag-over'));
     let best=null, bestDist=Infinity, bestIdx=-1;
@@ -2121,7 +2174,11 @@ function renderProject(){
       if(srt==='custom') return 0; // keep array insertion order
       return (b.createdAt||0)-(a.createdAt||0); // 'newest' default
     });
-    sorted.forEach(n=>c.appendChild(makeNoteCard(n, 'project')));
+    sorted.forEach(n=>{
+      const wrap=makeNoteCard(n, 'project');
+      attachNoteReorderDrag(wrap, n.id, sec.id);
+      c.appendChild(wrap);
+    });
   });
 
   // Add section button
@@ -2133,14 +2190,28 @@ function renderProject(){
 }
 
 function makeNoteCard(n, origin){
+  const wrap=document.createElement('div');
+  wrap.className='note-card-wrap';
+  wrap.dataset.nid=n.id;
+
+  const handle=document.createElement('div');
+  handle.className='note-drag-handle';
+  handle.setAttribute('data-drag','1');
+  handle.title='Przeciągnij aby zmienić kolejność';
+  handle.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg>';
+
   const card=document.createElement('div');
   card.className='note-card'+(n.pinned?' pinned':'');
   const title=(n.title||'').trim()||t('note.untitled');
   const preview=(n.blocks||[]).map(b=>plainText(b.content||'')).join(' ').slice(0,160);
   const words=(n.blocks||[]).reduce((s,b)=>s+wc(b.content||''),0);
-  card.innerHTML=`<div class="note-title">${esc(title)}</div>${preview?`<div class="note-preview">${esc(preview)}</div>`:`<div class="note-preview" style="font-style:italic;opacity:0.6">${esc(t('note.empty'))}</div>`}<div class="note-meta">${words} ${t('meta.words')} · ${fmtDate(n.updatedAt)}</div>`;
+  const reminderBadge = n.reminder && n.reminder.date ? `<div class="note-reminder-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>${fmtDate(n.reminder.date)}</div>` : '';
+  card.innerHTML=`<div class="note-title">${esc(title)}</div>${preview?`<div class="note-preview">${esc(preview)}</div>`:`<div class="note-preview" style="font-style:italic;opacity:0.6">${esc(t('note.empty'))}</div>`}<div class="note-meta">${words} ${t('meta.words')} · ${fmtDate(n.updatedAt)}</div>${reminderBadge}`;
   card.onclick=()=>openNote(n.id, origin==='project'?null:origin);
-  return card;
+
+  wrap.appendChild(handle);
+  wrap.appendChild(card);
+  return wrap;
 }
 
 /* ═══ SECTIONS ═══ */
@@ -2272,6 +2343,67 @@ function onSecEnd(){
   document.removeEventListener('touchend', onSecEnd);
   document.removeEventListener('mouseup', onSecEnd);
   secDrag=null;
+}
+
+/* ═══ NOTE DRAG REORDER ═══ */
+let noteDrag=null;
+function attachNoteReorderDrag(wrap, noteId, secId){
+  const handle=wrap.querySelector('.note-drag-handle');
+  if(!handle) return;
+  handle.addEventListener('touchstart',e=>startNoteDrag(e,wrap,noteId,secId,'touch'),{passive:false});
+  handle.addEventListener('mousedown',e=>startNoteDrag(e,wrap,noteId,secId,'mouse'));
+}
+function startNoteDrag(e,el,noteId,secId,kind){
+  e.preventDefault();
+  noteDrag={el,noteId,secId,kind,target:null,pos:null};
+  el.classList.add('dragging');
+  const mv=kind==='touch'?'touchmove':'mousemove';
+  const en=kind==='touch'?'touchend':'mouseup';
+  document.addEventListener(mv,onNoteMove,{passive:false});
+  document.addEventListener(en,onNoteEnd);
+}
+function onNoteMove(e){
+  if(!noteDrag) return;
+  e.preventDefault();
+  const y=noteDrag.kind==='touch'?e.touches[0].clientY:e.clientY;
+  const cards=Array.from(document.querySelectorAll('.note-card-wrap'));
+  let target=null,pos=null;
+  for(const card of cards){
+    if(card===noteDrag.el) continue;
+    const r=card.getBoundingClientRect();
+    if(y>=r.top-10 && y<=r.bottom+10){ target=card; pos=(y<r.top+r.height/2)?'top':'bottom'; break; }
+  }
+  cards.forEach(c=>c.classList.remove('drag-over-top','drag-over-bottom'));
+  if(target&&pos) target.classList.add('drag-over-'+pos);
+  noteDrag.target=target; noteDrag.pos=pos;
+}
+function onNoteEnd(){
+  if(!noteDrag) return;
+  document.querySelectorAll('.note-card-wrap').forEach(c=>c.classList.remove('dragging','drag-over-top','drag-over-bottom'));
+  if(noteDrag.target){
+    const p=getProject();
+    const fromId=noteDrag.noteId;
+    const toId=noteDrag.target.dataset.nid;
+    const fromIdx=p.notes.findIndex(n=>n.id===fromId);
+    let toIdx=p.notes.findIndex(n=>n.id===toId);
+    if(fromIdx!==-1 && toIdx!==-1){
+      const toNote=p.notes[toIdx];
+      const [moved]=p.notes.splice(fromIdx,1);
+      if(fromIdx<toIdx) toIdx--;
+      if(noteDrag.pos==='bottom') toIdx++;
+      moved.sectionId=toNote.sectionId;
+      p.notes.splice(toIdx,0,moved);
+      p.defaultSort='custom';
+      p.updatedAt=Date.now();
+      saveDb();
+      renderProject();
+    }
+  }
+  document.removeEventListener('touchmove',onNoteMove);
+  document.removeEventListener('mousemove',onNoteMove);
+  document.removeEventListener('touchend',onNoteEnd);
+  document.removeEventListener('mouseup',onNoteEnd);
+  noteDrag=null;
 }
 
 function promptNewNoteOrSection(){
@@ -2507,6 +2639,115 @@ function moveCurrentNoteToInbox(){
   state.nav.view='project'; state.nav.noteId=null; state.nav.noteOrigin=null;
   renderCurrentView();
   toast(t('toast.moved'));
+}
+
+/* ═══ SORT NOTES ═══ */
+function sortProjectNotes(){
+  closeSheet();
+  const p=getProject(); if(!p) return;
+  const pl=state.cfg.lang==='pl';
+  const opts=[
+    {k:'newest', l:t('sort.newest')},
+    {k:'oldest', l:t('sort.oldest')},
+    {k:'alpha',  l:t('sort.alpha')},
+    {k:'length', l:t('sort.length')},
+  ];
+  const html='<div class="stack">'+opts.map(o=>`<button class="action-row${p.defaultSort===o.k?' selected':''}" data-sk="${o.k}"><span class="action-row-label">${esc(o.l)}</span></button>`).join('')+'</div>';
+  openSheet(t('sheet.sortNotes'), html);
+  setTimeout(()=>{
+    document.querySelectorAll('.sheet-body [data-sk]').forEach(b=>{
+      b.onclick=()=>{
+        const sk=b.dataset.sk;
+        if(!confirm(pl?`Posortować notatki wg: "${t('sort.'+sk)}"?`:`Sort notes by "${t('sort.'+sk)}"?`)) return;
+        if(p.sections.length>1){
+          confirm(pl?'Sortować we WSZYSTKICH działach?\n(OK = tak, Anuluj = w każdym dziale osobno)':'Sort across ALL sections?\n(OK = yes, Cancel = within each section)');
+        }
+        p.defaultSort=sk;
+        p.updatedAt=Date.now(); saveDb(); closeSheet(); renderProject(); toast(t('toast.saved'));
+      };
+    });
+  },100);
+}
+
+/* ═══ REMINDER ═══ */
+function openReminderPicker(){
+  closeSheet();
+  const n=getNote(); if(!n) return;
+  const pl=state.cfg.lang==='pl';
+  const curVal=n.reminder?.date ? new Date(n.reminder.date).toISOString().slice(0,16) : '';
+  openSheet(pl?'Ustaw przypomnienie':'Set reminder',`<div class="stack">
+    <div class="field"><label class="field-label">${pl?'Data i godzina':'Date & time'}</label>
+    <input type="datetime-local" class="field-input" id="remDt" value="${esc(curVal)}" style="color:var(--text)"></div>
+    <button class="btn btn-primary" id="remSave" style="width:100%">${esc(t('common.save'))}</button>
+    ${n.reminder?.date?`<button class="btn btn-ghost" id="remClear" style="width:100%;color:var(--red)">${pl?'Usuń przypomnienie':'Remove reminder'}</button>`:''}
+  </div>`);
+  setTimeout(()=>{
+    document.getElementById('remSave').onclick=()=>{
+      const v=document.getElementById('remDt').value; if(!v){ toast(pl?'Wybierz datę':'Pick date'); return; }
+      const ms=new Date(v).getTime();
+      if(ms<=Date.now()){ toast(pl?'Data musi być w przyszłości':'Must be in the future'); return; }
+      n.reminder={date:ms,notified:false}; n.updatedAt=Date.now(); saveDb(); closeSheet();
+      scheduleReminderCheck();
+      toast(pl?'Przypomnienie ustawione':'Reminder set');
+    };
+    document.getElementById('remClear')?.addEventListener('click',()=>{
+      n.reminder=null; n.updatedAt=Date.now(); saveDb(); closeSheet();
+      toast(pl?'Usunięto':'Removed');
+    });
+    document.getElementById('remDt')?.focus();
+  },100);
+}
+function scheduleReminderCheck(){
+  clearInterval(state._reminderInterval);
+  state._reminderInterval=setInterval(checkReminders,30000);
+}
+function checkReminders(){
+  const now=Date.now();
+  const all=[...state.db.inbox,...state.db.projects.flatMap(p=>p.notes||[]),...(state.db.archive||[])];
+  all.forEach(n=>{
+    if(n.reminder&&n.reminder.date&&!n.reminder.notified&&n.reminder.date<=now){
+      n.reminder.notified=true; saveDb();
+      const title=(n.title||'').trim()||t('note.untitled');
+      if(typeof Notification!=='undefined'&&Notification.permission==='granted'){
+        try{ new Notification('YEStess — '+title,{body:state.cfg.lang==='pl'?'Przypomnienie o notatce':'Note reminder'}); }catch(e){}
+      } else { toast('⏰ '+title); }
+    }
+  });
+}
+
+/* ═══ MOVE NOTE TO ANOTHER PROJECT ═══ */
+function moveNoteToProject(){
+  closeSheet();
+  const n=getNote(); const p=getProject(); if(!n||!p) return;
+  const others=state.db.projects.filter(pr=>pr.id!==p.id);
+  if(!others.length){ toast(state.cfg.lang==='pl'?'Brak innych projektów':'No other projects'); return; }
+  const html='<div class="stack">'+others.map(pr=>`<button class="action-row" data-pid="${pr.id}"><span style="font-size:20px">${pr.icon}</span><span class="action-row-label">${esc(pr.name)}</span></button>`).join('')+'</div>';
+  openSheet(t('sheet.pickProject'),html);
+  setTimeout(()=>{
+    document.querySelectorAll('.sheet-body [data-pid]').forEach(b=>{
+      b.onclick=()=>{
+        const target=state.db.projects.find(pr=>pr.id===b.dataset.pid); if(!target) return;
+        if(!target.sections.length) target.sections.push({id:uid('s'),name:(target.sectionLabel||'Notatki')+' 1',order:0});
+        const secs=[...target.sections].sort((a,b)=>a.order-b.order);
+        if(secs.length===1){ doMoveNoteToProject(n,p,target,secs[0].id); return; }
+        const sh='<div class="stack">'+secs.map(s=>`<button class="action-row" data-sid="${s.id}"><span class="action-row-label">${esc(s.name)}</span></button>`).join('')+'</div>';
+        openSheet(t('sheet.pickSection'),sh);
+        setTimeout(()=>{
+          document.querySelectorAll('.sheet-body [data-sid]').forEach(bb=>{
+            bb.onclick=()=>doMoveNoteToProject(n,p,target,bb.dataset.sid);
+          });
+        },100);
+      };
+    });
+  },100);
+}
+function doMoveNoteToProject(n,fromProj,toProj,secId){
+  fromProj.notes=fromProj.notes.filter(x=>x.id!==n.id); fromProj.updatedAt=Date.now();
+  n.sectionId=secId; n.updatedAt=Date.now();
+  toProj.notes.push(n); toProj.updatedAt=Date.now();
+  saveDb(); closeSheet();
+  state.nav.view='project'; state.nav.projectId=toProj.id; state.nav.noteId=null; state.nav.noteOrigin=null;
+  renderCurrentView(); toast(t('toast.moved'));
 }
 
 function archiveCurrentNote(){
@@ -3613,8 +3854,12 @@ function startDictation(blockId){
   statusEl.querySelector('button').onclick=()=>stopDictation();
   if(block) block.appendChild(statusEl);
   sr.onresult=e=>{
-    finalText='';
-    for(let i=0;i<e.results.length;i++) finalText += e.results[i][0].transcript + ' ';
+    let final='', interim='';
+    for(let i=0;i<e.results.length;i++){
+      if(e.results[i].isFinal) final+=e.results[i][0].transcript+' ';
+      else interim+=e.results[i][0].transcript;
+    }
+    finalText=final+interim;
     const note=getNote();
     const b=note?.blocks?.find(x=>x.id===blockId);
     if(b){ b.content=finalText.trim(); note.updatedAt=Date.now(); saveDb(); }
@@ -3654,34 +3899,36 @@ function closeFind(){
   findCtx={q:'', idx:-1, matches:[]};
 }
 function clearFindHighlights(){
-  const note=getNote(); if(!note) return;
-  // Re-render to clear highlight marks
+  // Safely replace mark nodes with plain text, normalize parent
   document.querySelectorAll('mark.find-hit').forEach(m=>{
     const txt=document.createTextNode(m.textContent);
     m.replaceWith(txt);
+  });
+  // Normalize text nodes to avoid split fragments
+  document.querySelectorAll('#blocksContainer .block-content, #edTitle').forEach(el=>{
+    try{ el.normalize(); }catch(e){}
   });
 }
 function doFindRun(q){
   clearFindHighlights();
   findCtx.q=q; findCtx.matches=[]; findCtx.idx=-1;
-  if(!q){ updateFindCount(); return; }
+  if(!q || q.length < 2){ updateFindCount(); return; }
   const note=getNote(); if(!note){ updateFindCount(); return; }
   const scope = document.querySelectorAll('#blocksContainer .block-content, #blocksContainer textarea, #edTitle');
-  const re = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'gi');
+  const reEsc = q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  const re = new RegExp(reEsc, 'gi');
   scope.forEach(el=>{
     if(el.tagName==='TEXTAREA' || el.tagName==='INPUT'){
-      // highlight count only — textarea can't hold <mark>
       const m = el.value.match(re);
       if(m) findCtx.matches.push(...m.map(()=>({el, type:'field'})));
     } else {
-      // walk text nodes
       const walker=document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
       const nodes=[]; let n; while((n=walker.nextNode())) nodes.push(n);
       nodes.forEach(tn=>{
         if(!tn.nodeValue) return;
-        const parts = tn.nodeValue.split(re);
-        const hits  = tn.nodeValue.match(re);
+        const hits = tn.nodeValue.match(re);
         if(!hits) return;
+        const parts = tn.nodeValue.split(re);
         const frag=document.createDocumentFragment();
         parts.forEach((part,i)=>{
           frag.appendChild(document.createTextNode(part));
@@ -3704,7 +3951,8 @@ function markCurrent(){
   if(cur && cur.el && cur.el.scrollIntoView){ try{ cur.el.scrollIntoView({block:'center', behavior:'smooth'}); }catch(e){} }
 }
 function updateFindCount(){
-  document.getElementById('findCount').textContent = `${findCtx.matches.length?findCtx.idx+1:0}/${findCtx.matches.length}`;
+  const el=document.getElementById('findCount');
+  if(el) el.textContent = `${findCtx.matches.length?findCtx.idx+1:0}/${findCtx.matches.length}`;
 }
 function nextFind(dir){
   if(!findCtx.matches.length) return;
