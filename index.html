@@ -798,7 +798,7 @@ pl:{
 'exit.title':'Zapisać notatkę?','exit.sub':'Gdzie ma się zapisać ta myśl?','exit.keepInbox':'Zostaw w Inboxie','exit.saveToProject':'Zapisz do projektu',
 'settings.appearance':'Wygląd','settings.theme':'Motyw','settings.language':'Język','settings.echo':'Echo — powroty do notatek','settings.echoHint':'Pokazuj stare notatki do ponownego rozważenia','settings.data':'Dane','settings.export':'Eksportuj dane','settings.exportHint':'Kopia zapasowa JSON','settings.import':'Importuj dane','settings.importHint':'Zastąpi aktualne dane','settings.import.replace':'Zastąp','settings.import.merge':'Scal','settings.import.mergeHint':'Dopisz do istniejących danych','settings.stats':'Statystyki','settings.projects':'Projekty','settings.sections':'Działy','settings.notes':'Notatki','settings.words':'Słowa','settings.danger':'Strefa niebezpieczna','settings.reset':'Wyczyść wszystko','settings.resetHint':'Usuwa wszystko.',
 'sheet.newProject':'Nowy projekt','sheet.newFolder':'Nowy folder','sheet.newSection':'Nowy dział','sheet.editSection':'Edytuj dział','sheet.rename':'Zmień nazwę','sheet.move':'Przenieś','sheet.copy':'Kopiuj','sheet.duplicate':'Duplikuj','sheet.export':'Eksportuj','sheet.delete':'Usuń','sheet.editProject':'Edytuj projekt','sheet.pinToggle':'Przypnij / odepnij','sheet.moveToInbox':'Przenieś do Inboxu','sheet.archive':'Archiwizuj','sheet.unarchive':'Przywróć','sheet.copyText':'Skopiuj tekst','sheet.customBlocks':'Własne typy bloków','sheet.echoes':'Własne echa','sheet.stats':'Statystyki','sheet.find':'Znajdź / zamień','sheet.exportPng':'Zapisz jako obraz','sheet.exportJson':'Zapisz jako JSON','sheet.exportText':'Zapisz jako tekst','sheet.help':'Centrum pomocy','sheet.install':'Zainstaluj na urządzeniu','sheet.font':'Czcionka','sheet.blockOrder':'Kolejność bloków','sheet.hidden':'Ukryty notatnik','sheet.tutorial':'Samouczek',
-'sheet.pickProject':'Do którego projektu?','sheet.pickSection':'Do którego działu?','sheet.moveUp':'W górę','sheet.moveDown':'W dół',
+'sheet.pickProject':'Do którego projektu?','sheet.pickSection':'Do którego działu?','sheet.moveUp':'W górę','sheet.moveDown':'W dół','sheet.moveSection':'Przenieś do działu','sheet.sortNotes':'Sortowanie notatek','project.sortLabel':'Domyślne sortowanie','sort.newest':'Najnowsze','sort.oldest':'Najstarsze','sort.alpha':'Alfabetycznie','sort.length':'Według długości','sort.custom':'Ręcznie','toast.noOtherSections':'Brak innych działów',
 'block.text':'Tekst','block.heading':'Nagłówek','block.quote':'Cytat','block.code':'Kod','block.image':'Obraz','block.audio':'Audio','block.drawing':'Rysunek','block.check':'Zadania','block.callout':'Wyróżnienie','block.markdown':'Markdown','block.dictation':'Dyktowanie','block.more':'Więcej','block.custom':'Własny',
 'block.markdown.preview':'Podgląd','block.markdown.edit':'Edytuj','block.code.run':'Uruchom','block.code.notRunnable':'Ten język nie działa w przeglądarce. Używaj HTML / JS / CSS aby uruchamiać kod.','block.dictation.start':'Zacznij dyktować','block.dictation.stop':'Zatrzymaj',
 'customBlocks.title':'Własne typy bloków','customBlocks.desc':'Stwórz własne typy z nazwą i kolorem. Dostępne tylko w tym projekcie.','customBlocks.name':'Nazwa','customBlocks.color':'Kolor','customBlocks.add':'Dodaj typ','customBlocks.empty':'Brak własnych typów',
@@ -847,7 +847,7 @@ en:{
 'exit.title':'Save this note?','exit.sub':'Where should this thought go?','exit.keepInbox':'Keep in Inbox','exit.saveToProject':'Save to project',
 'settings.appearance':'Appearance','settings.theme':'Theme','settings.language':'Language','settings.echo':'Echo — revisit old notes','settings.echoHint':'Surface old notes for reconsideration','settings.data':'Data','settings.export':'Export data','settings.exportHint':'JSON backup','settings.import':'Import data','settings.importHint':'Will replace current data','settings.import.replace':'Replace','settings.import.merge':'Merge','settings.import.mergeHint':'Append to existing data','settings.stats':'Stats','settings.projects':'Projects','settings.sections':'Sections','settings.notes':'Notes','settings.words':'Words','settings.danger':'Danger zone','settings.reset':'Wipe everything','settings.resetHint':'Removes everything.',
 'sheet.newProject':'New project','sheet.newFolder':'New folder','sheet.newSection':'New section','sheet.editSection':'Edit section','sheet.rename':'Rename','sheet.move':'Move','sheet.copy':'Copy','sheet.duplicate':'Duplicate','sheet.export':'Export','sheet.delete':'Delete','sheet.editProject':'Edit project','sheet.pinToggle':'Pin / unpin','sheet.moveToInbox':'Move to Inbox','sheet.archive':'Archive','sheet.unarchive':'Restore','sheet.copyText':'Copy text','sheet.customBlocks':'Custom block types','sheet.echoes':'Custom echoes','sheet.stats':'Statistics','sheet.find':'Find / replace','sheet.exportPng':'Save as image','sheet.exportJson':'Save as JSON','sheet.exportText':'Save as text','sheet.help':'Help center','sheet.install':'Install on device','sheet.font':'Font','sheet.blockOrder':'Block order','sheet.hidden':'Hidden notebook','sheet.tutorial':'Tutorial',
-'sheet.pickProject':'Which project?','sheet.pickSection':'Which section?','sheet.moveUp':'Move up','sheet.moveDown':'Move down',
+'sheet.pickProject':'Which project?','sheet.pickSection':'Which section?','sheet.moveUp':'Move up','sheet.moveDown':'Move down','sheet.moveSection':'Move to section','sheet.sortNotes':'Note sort order','project.sortLabel':'Default sort','sort.newest':'Newest first','sort.oldest':'Oldest first','sort.alpha':'Alphabetical','sort.length':'By length','sort.custom':'Manual','toast.noOtherSections':'No other sections',
 'block.text':'Text','block.heading':'Heading','block.quote':'Quote','block.code':'Code','block.image':'Image','block.audio':'Audio','block.drawing':'Drawing','block.check':'Tasks','block.callout':'Callout','block.markdown':'Markdown','block.dictation':'Dictation','block.more':'More','block.custom':'Custom',
 'block.markdown.preview':'Preview','block.markdown.edit':'Edit','block.code.run':'Run','block.code.notRunnable':'This language does not run in the browser. Use HTML / JS / CSS.','block.dictation.start':'Start dictating','block.dictation.stop':'Stop',
 'customBlocks.title':'Custom block types','customBlocks.desc':'Create your own types with name and color. Available only in this project.','customBlocks.name':'Name','customBlocks.color':'Color','customBlocks.add':'Add type','customBlocks.empty':'No custom types',
@@ -1708,6 +1708,7 @@ function headerRightAction(){
       {icon:SVG.copy, label:t('sheet.duplicate'), on:duplicateCurrentNote, hide:origin==='inbox'||origin==='archive'},
       {icon:SVG.image, label:t('sheet.exportPng'), on:()=>exportNoteAsPng(getNote()), hide:origin==='inbox'||origin==='archive'},
       {icon:SVG.fileText, label:t('sheet.copyText'), on:copyNoteText},
+      {icon:SVG.move, label:t('sheet.moveSection'), on:moveNoteToSection, hide:!!(origin==='inbox'||origin==='archive'||!getProject()||!(getProject()?.sections?.length>1))},
       {icon:SVG.move, label: origin==='inbox' ? t('sheet.move') : (origin==='archive' ? t('sheet.unarchive') : t('sheet.moveToInbox')), on: origin==='inbox'?moveInboxToProject : (origin==='archive'?restoreArchivedNote : moveCurrentNoteToInbox)},
       {icon:SVG.archive, label: origin==='archive' ? t('sheet.unarchive') : t('sheet.archive'), on: origin==='archive' ? restoreArchivedNote : archiveCurrentNote, hide: origin==='archive'},
       {icon:SVG.trash, label:t('sheet.delete'), danger:true, on:promptDeleteNote}
@@ -2105,11 +2106,20 @@ function renderProject(){
     attachSectionDrag(bar, sec.id);
     c.appendChild(bar);
 
-    // notes in this section — sorted by creation date, pinned first
+    // notes in this section — sort order governed by p.defaultSort
     const notes = p.notes.filter(n=>n.sectionId===sec.id);
     const sorted = [...notes].sort((a,b)=>{
       if(!!b.pinned !== !!a.pinned) return (b.pinned?1:0)-(a.pinned?1:0);
-      return (b.createdAt||0)-(a.createdAt||0);
+      const srt = p.defaultSort||'newest';
+      if(srt==='oldest') return (a.createdAt||0)-(b.createdAt||0);
+      if(srt==='alpha')  return (a.title||'').localeCompare(b.title||'');
+      if(srt==='length'){
+        const la=(a.blocks||[]).reduce((s,bl)=>s+plainText(bl.content||'').length,0);
+        const lb=(b.blocks||[]).reduce((s,bl)=>s+plainText(bl.content||'').length,0);
+        return lb-la;
+      }
+      if(srt==='custom') return 0; // keep array insertion order
+      return (b.createdAt||0)-(a.createdAt||0); // 'newest' default
     });
     sorted.forEach(n=>c.appendChild(makeNoteCard(n, 'project')));
   });
@@ -2270,10 +2280,24 @@ function promptNewNoteOrSection(){
     const s={id:uid('s'),name:p.sectionLabel+' 1',order:0};
     p.sections.push(s); saveDb();
   }
-  // Add note to last section
+  if(p.sections.length===1){
+    // Only one section — add directly
+    createNoteInSection(p.sections[0].id);
+    return;
+  }
+  // Multiple sections — ask which one
   const sorted=[...p.sections].sort((a,b)=>a.order-b.order);
-  const lastSec = sorted[sorted.length-1];
-  const note = {id:uid('n'),sectionId:lastSec.id,title:'',blocks:[{id:uid('b'),kind:'text',content:''}],pinned:false,createdAt:Date.now(),updatedAt:Date.now(),openCount:0,lastOpenedAt:Date.now()};
+  const secsHtml=sorted.map(s=>`<button class="action-row" data-sid="${s.id}"><span class="action-row-label">${esc(s.name)}</span></button>`).join('');
+  openSheet(t('sheet.pickSection'),'<div class="stack">'+secsHtml+'</div>');
+  setTimeout(()=>{
+    document.querySelectorAll('.sheet-body [data-sid]').forEach(b=>{
+      b.onclick=()=>{ closeSheet(); createNoteInSection(b.dataset.sid); };
+    });
+  }, 100);
+}
+function createNoteInSection(sectionId){
+  const p=getProject();
+  const note={id:uid('n'),sectionId,title:'',blocks:[{id:uid('b'),kind:'text',content:''}],pinned:false,createdAt:Date.now(),updatedAt:Date.now(),openCount:0,lastOpenedAt:Date.now()};
   p.notes.push(note);
   p.updatedAt=Date.now();
   saveDb();
@@ -2366,9 +2390,12 @@ function offerExitChoice(){
 }
 
 function pickProjectAndSectionForNote(note){
-  const projectsHtml = state.db.projects.map(p=>`<button class="action-row" data-pid="${p.id}"><span style="font-size:20px">${p.icon}</span><span class="action-row-label">${esc(p.name)}</span></button>`).join('');
+  const createBtn=`<button class="action-row" data-create-proj><span style="font-size:20px">➕</span><span class="action-row-label" style="color:var(--accent)">${esc(t('sheet.newProject'))}</span></button>`;
+  const projectsHtml = createBtn + state.db.projects.map(p=>`<button class="action-row" data-pid="${p.id}"><span style="font-size:20px">${p.icon}</span><span class="action-row-label">${esc(p.name)}</span></button>`).join('');
   openSheet(t('sheet.pickProject'), '<div class="stack">'+projectsHtml+'</div>');
   setTimeout(()=>{
+    const cBtn=document.querySelector('.sheet-body [data-create-proj]');
+    if(cBtn) cBtn.onclick=()=>{ closeSheet(); promptNewProjectThenMoveNote(note); };
     document.querySelectorAll('.sheet-body [data-pid]').forEach(b=>{
       b.onclick=()=>{
         const p=state.db.projects.find(x=>x.id===b.dataset.pid);
@@ -2406,10 +2433,65 @@ function pickProjectAndSectionForNote(note){
   }, 100);
 }
 
+function promptNewProjectThenMoveNote(note){
+  // Create new project and then move the note into it
+  let chosenIcon='📓';
+  const iconsHtml = ICONS.map(ic=>`<button class="icon-option${ic==='📓'?' selected':''}" data-ic="${ic}">${ic}</button>`).join('');
+  openSheet(t('sheet.newProject'), `
+    <div class="stack">
+      <div class="field"><label class="field-label">${esc(t('ob.proj.name'))}</label><input class="field-input" id="nppName" placeholder="${esc(t('ph.projectName'))}" maxlength="60"></div>
+      <div class="field"><label class="field-label">${esc(t('ob.proj.desc'))}</label><textarea class="field-textarea" id="nppDesc" maxlength="200"></textarea></div>
+      <div class="field"><label class="field-label">${esc(t('ob.icon.title'))}</label><div class="icon-grid" id="nppIcons">${iconsHtml}</div></div>
+      <button class="btn btn-primary" id="nppGo" style="width:100%">${esc(t('common.create'))}</button>
+    </div>`);
+  setTimeout(()=>{
+    document.getElementById('nppIcons').querySelectorAll('.icon-option').forEach(b=>{
+      b.onclick=()=>{ chosenIcon=b.dataset.ic; document.querySelectorAll('#nppIcons .icon-option').forEach(x=>x.classList.toggle('selected',x===b)); };
+    });
+    document.getElementById('nppName').focus();
+    document.getElementById('nppGo').onclick=()=>{
+      const name=document.getElementById('nppName').value.trim(); if(!name){ toast(t('ob.proj.name')); return; }
+      const desc=document.getElementById('nppDesc').value.trim();
+      const sectionLabel=t('label.chapters');
+      const secId=uid('s');
+      const project={id:uid('p'),folderId:null,name,desc,icon:chosenIcon,sectionLabel,defaultSort:'newest',
+        sections:[{id:secId,name:sectionLabel+' 1',order:0}],notes:[],customBlockKinds:[],createdAt:Date.now(),updatedAt:Date.now()};
+      state.db.projects.push(project);
+      // move the note in
+      state.db.inbox = state.db.inbox.filter(x=>x.id!==note.id);
+      note.sectionId = secId; note.updatedAt=Date.now();
+      project.notes.push(note);
+      saveDb(); closeSheet();
+      state.nav.view='project'; state.nav.projectId=project.id; state.nav.noteId=null; state.nav.noteOrigin=null;
+      switchTab('home'); state.nav.tab='home'; state.nav.view='project'; renderCurrentView();
+      toast(t('toast.created'));
+    };
+  }, 300);
+}
+
 function moveInboxToProject(){
   closeSheet();
   if(state.db.projects.length===0){ toast(t('toast.needProject')); return; }
   pickProjectAndSectionForNote(getNote());
+}
+
+function moveNoteToSection(){
+  closeSheet();
+  const p=getProject(); const n=getNote();
+  if(!p||!n) return;
+  const sorted=[...p.sections].sort((a,b)=>(a.order||0)-(b.order||0));
+  const others=sorted.filter(s=>s.id!==n.sectionId);
+  if(!others.length){ toast(t('toast.noOtherSections')); return; }
+  const secsHtml=others.map(s=>`<button class="action-row" data-sid="${s.id}"><span class="action-row-label">${esc(s.name)}</span></button>`).join('');
+  openSheet(t('sheet.moveSection'), '<div class="stack">'+secsHtml+'</div>');
+  setTimeout(()=>{
+    document.querySelectorAll('.sheet-body [data-sid]').forEach(b=>{
+      b.onclick=()=>{
+        n.sectionId=b.dataset.sid; n.updatedAt=Date.now(); p.updatedAt=Date.now();
+        saveDb(); closeSheet(); renderCurrentView(); toast(t('toast.moved'));
+      };
+    });
+  }, 100);
 }
 
 function moveCurrentNoteToInbox(){
@@ -2575,17 +2657,29 @@ function openProjectEdit(){
       <div class="field"><label class="field-label">${esc(t('ob.proj.desc'))}</label><textarea class="field-textarea" id="epDesc" maxlength="200">${esc(p.desc||'')}</textarea></div>
       <div class="field"><label class="field-label">${esc(t('ob.icon.title'))}</label><div class="icon-grid" id="epIcons">${iconsHtml}</div></div>
       <div class="field"><label class="field-label">${esc(t('ob.label.title'))}</label><input class="field-input" id="epLabel" value="${esc(p.sectionLabel)}" maxlength="30"></div>
+      <div class="field"><label class="field-label">${esc(t('project.sortLabel'))}</label>
+        <select class="field-input" id="epSort" style="cursor:pointer">
+          <option value="newest">${esc(t('sort.newest'))}</option>
+          <option value="oldest">${esc(t('sort.oldest'))}</option>
+          <option value="alpha">${esc(t('sort.alpha'))}</option>
+          <option value="length">${esc(t('sort.length'))}</option>
+          <option value="custom">${esc(t('sort.custom'))}</option>
+        </select>
+      </div>
       <button class="btn btn-primary" id="epGo" style="width:100%">${esc(t('common.save'))}</button>
     </div>`);
   setTimeout(()=>{
     document.getElementById('epIcons').querySelectorAll('.icon-option').forEach(b=>{
       b.onclick=()=>{ chosenIcon=b.dataset.ic; document.querySelectorAll('#epIcons .icon-option').forEach(x=>x.classList.toggle('selected',x===b)); };
     });
+    const sortSel=document.getElementById('epSort');
+    if(sortSel) sortSel.value=p.defaultSort||'newest';
     document.getElementById('epGo').onclick=()=>{
       p.name=document.getElementById('epName').value.trim()||p.name;
       p.desc=document.getElementById('epDesc').value.trim();
       p.icon=chosenIcon;
       p.sectionLabel=document.getElementById('epLabel').value.trim()||p.sectionLabel;
+      p.defaultSort=(document.getElementById('epSort')?.value)||'newest';
       p.updatedAt=Date.now();
       saveDb(); closeSheet(); renderCurrentView();
       toast(t('toast.saved'));
@@ -2859,7 +2953,6 @@ function addBlock(kind, note, customKindId){
   note.updatedAt=Date.now();
   saveDb();
   renderEditor();
-  // Scroll new block into center of screen so it's not hidden below the fold
   setTimeout(()=>{
     const newEl=document.querySelector(`#blocksContainer .block[data-id="${b.id}"]`);
     if(newEl) newEl.scrollIntoView({behavior:'smooth', block:'center'});
@@ -2867,11 +2960,9 @@ function addBlock(kind, note, customKindId){
   if(kind==='image') triggerImagePick(b.id);
   else if(kind==='drawing') openDraw(b.id);
   else {
-    setTimeout(()=>{
-      const blocks=document.querySelectorAll('#blocksContainer .block-content');
-      const last=blocks[blocks.length-1];
-      if(last) last.focus();
-    }, 100);
+    // Focus immediately (synchronously) so the keyboard stays open on mobile
+    const newCE=document.querySelector(`#blocksContainer .block[data-id="${b.id}"] .block-content`);
+    if(newCE) newCE.focus();
   }
 }
 
@@ -3314,8 +3405,18 @@ function showFmtBar(ce){
   const kind=ce.closest('.block')?.dataset.kind;
   if(kind==='code'||kind==='check'||kind==='markdown'){ bar.classList.remove('show'); return; }
   bar.classList.add('show');
+  updateFmtBarState();
 }
 function hideFmtBar(){ document.getElementById('fmtBar').classList.remove('show'); activeCE=null; savedRange=null; }
+function updateFmtBarState(){
+  const bar=document.getElementById('fmtBar');
+  if(!bar.classList.contains('show')) return;
+  ['bold','italic','underline','strikeThrough','insertUnorderedList','insertOrderedList'].forEach(cmd=>{
+    const btn=bar.querySelector(`[data-cmd="${cmd}"]`);
+    if(!btn) return;
+    try{ btn.classList.toggle('active', document.queryCommandState(cmd)); }catch(e){}
+  });
+}
 
 function saveSelection(){
   try{
@@ -3335,18 +3436,19 @@ function restoreSelection(){
   }catch(e){}
 }
 
-// Save selection continuously while editing
-document.addEventListener('selectionchange', ()=>{ if(activeCE) saveSelection(); });
+// Save selection continuously while editing; also update fmt-bar active state
+document.addEventListener('selectionchange', ()=>{ if(activeCE){ saveSelection(); updateFmtBarState(); } });
 
 // Save selection on mouse/pointer press (desktop) — preventDefault keeps caret in CE
+// Also prevent focus loss when tapping add-block bar buttons (keeps keyboard open)
 document.addEventListener('pointerdown', e=>{
-  const btn=e.target.closest('.fmt-btn');
-  if(!btn) return;
-  saveSelection();
-  e.preventDefault();
-});
+  const fmtBtn=e.target.closest('.fmt-btn');
+  const addBtn=e.target.closest('.add-block-btn');
+  if(fmtBtn){ saveSelection(); e.preventDefault(); return; }
+  if(addBtn && activeCE){ saveSelection(); e.preventDefault(); }
+}, {passive:false});
 document.addEventListener('mousedown', e=>{
-  if(e.target.closest('.fmt-btn')){ saveSelection(); e.preventDefault(); }
+  if(e.target.closest('.fmt-btn')||e.target.closest('.add-block-btn')){ saveSelection(); e.preventDefault(); }
 });
 // On touch: save selection only; do NOT preventDefault — let touchend fire the command
 document.addEventListener('touchstart', e=>{
@@ -3361,6 +3463,7 @@ function applyFmtCmd(btn){
   restoreSelection();
   try{ document.execCommand(cmd,false,null); }catch(e){}
   saveSelection();
+  updateFmtBarState();
 }
 // Touch: execute on touchend so blur timer (400ms) hasn't cleared activeCE yet
 document.addEventListener('touchend', e=>{
@@ -4090,76 +4193,186 @@ function openLangSettings(){
 }
 
 /* ═══ EXPORT / IMPORT ═══ */
-/* ═══ Export note as PNG (Canvas-based) ═══ */
-async function exportNoteAsPng(note){
+/* ═══ Export note as PNG (direct Canvas2D – no SVG foreignObject) ═══ */
+function exportNoteAsPng(note){
   closeSheet();
   if(!note){ note = getNote(); }
   if(!note) return;
   toast(state.cfg.lang==='pl'?'Generuję obraz...':'Generating image...');
-  // Build a styled HTML representation, then rasterize via SVG foreignObject
-  const W = 720, padding = 36;
+
+  const W = 720, P = 44;
   const cs = getComputedStyle(document.body);
-  const bg = cs.getPropertyValue('--bg').trim() || '#f7f6f2';
-  const surface = cs.getPropertyValue('--surface').trim() || '#fff';
-  const text = cs.getPropertyValue('--text').trim() || '#1a1916';
-  const text2 = cs.getPropertyValue('--text2').trim() || '#5c5a52';
-  const accent = cs.getPropertyValue('--accent').trim() || '#2c5f4a';
-  const border = cs.getPropertyValue('--border').trim() || '#e0ddd4';
-  const display = cs.getPropertyValue('--display').trim() || 'Georgia, serif';
-  const body = cs.getPropertyValue('--body').trim() || 'system-ui, sans-serif';
-  const title = (note.title||'').trim() || t('note.untitled');
-  const blocksHtml = (note.blocks||[]).map(b=>{
-    const c = b.content||'';
-    if(b.kind==='heading') return `<h2 style="font-family:${display};font-weight:600;font-size:22px;margin:18px 0 6px">${esc(plainText(c))||'&nbsp;'}</h2>`;
-    if(b.kind==='quote') return `<blockquote style="border-left:3px solid ${accent};padding:6px 14px;color:${text2};margin:10px 0;font-style:italic">${c||'&nbsp;'}</blockquote>`;
-    if(b.kind==='callout') return `<div style="background:${accent}20;border-left:3px solid ${accent};padding:10px 14px;border-radius:6px;margin:10px 0">${c||'&nbsp;'}</div>`;
-    if(b.kind==='code') { const parsed=parseCodeContent(c); return `<pre style="background:#1a1a1a;color:#eaeaea;padding:14px;border-radius:8px;overflow:hidden;font-family:monospace;font-size:13px;margin:10px 0;white-space:pre-wrap">${esc(parsed.code)}</pre>`; }
-    if(b.kind==='check'){
-      const lines=plainText(c).split('\n').map(l=>{ const done=/^\[x\]/i.test(l.trim()); const tx=l.replace(/^\[[x ]\]\s*/i,''); return `<div style="margin:4px 0">${done?'☑':'☐'} ${esc(tx)}</div>`; }).join('');
-      return `<div style="margin:10px 0">${lines}</div>`;
+  const clrBg      = cs.getPropertyValue('--bg').trim()      || '#f7f6f2';
+  const clrText    = cs.getPropertyValue('--text').trim()    || '#1a1916';
+  const clrText2   = cs.getPropertyValue('--text2').trim()   || '#5c5a52';
+  const clrAccent  = cs.getPropertyValue('--accent').trim()  || '#2c5f4a';
+  const clrBorder  = cs.getPropertyValue('--border').trim()  || '#e0ddd4';
+  const clrSurface = cs.getPropertyValue('--surface2').trim()|| '#f0efe9';
+  const noteTitle  = (note.title||'').trim() || t('note.untitled');
+  const contentW   = W - P * 2;
+
+  // temporary canvas for text measurement
+  const mc = document.createElement('canvas');
+  const mx = mc.getContext('2d');
+  function wrapText(text, font, maxW){
+    mx.font = font;
+    const words = String(text).split(' ');
+    const out = [];
+    let line = '';
+    for(const w of words){
+      const test = line ? line+' '+w : w;
+      if(mx.measureText(test).width > maxW && line){ out.push(line); line = w; }
+      else line = test;
     }
-    if(b.kind==='markdown') return `<div style="margin:10px 0;font-size:14px">${mdToHtml(c)}</div>`;
-    if(b.kind==='image' && c) return `<img src="${c}" style="max-width:100%;border-radius:8px;margin:10px 0">`;
-    if(b.kind==='drawing' && c) return `<img src="${c}" style="max-width:100%;border-radius:8px;margin:10px 0">`;
-    if(b.kind==='audio') return `<div style="background:${border};padding:10px;border-radius:8px;font-size:13px;color:${text2};margin:10px 0">🎤 audio</div>`;
-    return `<div style="margin:10px 0;line-height:1.6">${c||'&nbsp;'}</div>`;
-  }).join('');
-  const html = `
-    <div xmlns="http://www.w3.org/1999/xhtml" style="box-sizing:border-box;width:${W}px;background:${bg};color:${text};font-family:${body};padding:${padding}px;font-size:15px;line-height:1.6">
-      <h1 style="font-family:${display};font-weight:600;font-size:30px;margin:0 0 18px;color:${text}">${esc(title)}</h1>
-      <div>${blocksHtml}</div>
-      <div style="margin-top:24px;padding-top:14px;border-top:1px solid ${border};color:${text2};font-size:11px;letter-spacing:0.06em">YEStess · ${new Date().toLocaleDateString()}</div>
-    </div>
-  `;
-  // Measure height
-  const meas = document.createElement('div');
-  meas.innerHTML = html; meas.style.position='absolute'; meas.style.left='-9999px'; meas.style.top='0';
-  document.body.appendChild(meas);
-  const inner = meas.firstElementChild;
-  const H = Math.max(400, inner.offsetHeight + 20);
-  meas.remove();
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}"><foreignObject width="100%" height="100%">${html}</foreignObject></svg>`;
-  const blob = new Blob([svg], {type:'image/svg+xml;charset=utf-8'});
-  const url = URL.createObjectURL(blob);
-  const img = new Image();
-  img.onload = ()=>{
-    const cv = document.createElement('canvas');
-    cv.width=W*2; cv.height=H*2; // 2x retina
+    if(line) out.push(line);
+    return out.length ? out : [''];
+  }
+
+  // Build render items
+  const items = [];
+  // Title
+  items.push({lines: wrapText(noteTitle,'700 28px Georgia,serif',contentW), font:'700 28px Georgia,serif', color:clrText, lineH:36, mt:0, mb:18});
+
+  (note.blocks||[]).forEach(b=>{
+    const raw = b.content || '';
+    const c   = plainText(raw);
+    if(b.kind==='heading'){
+      const f='700 21px Georgia,serif';
+      items.push({lines:wrapText(c||'',f,contentW), font:f, color:clrText, lineH:28, mt:16, mb:6});
+    } else if(b.kind==='quote'){
+      const f='italic 16px Georgia,serif';
+      items.push({lines:wrapText(c||'',f,contentW-18), font:f, color:clrText2, lineH:24, mt:10, mb:10, pl:18, borderLeft:clrAccent});
+    } else if(b.kind==='callout'){
+      const f='15px system-ui,sans-serif';
+      items.push({lines:wrapText(c||'',f,contentW-20), font:f, color:clrText, lineH:22, mt:10, mb:10, px:14, py:10, bg:clrAccent+'22', borderLeft:clrAccent, r:6});
+    } else if(b.kind==='code'){
+      const parsed = typeof parseCodeContent==='function' ? parseCodeContent(raw) : {code:c};
+      const codeText = (parsed.code||c).replace(/\t/g,'  ');
+      const f='13px monospace';
+      const cLines = codeText.split('\n').flatMap(ln=>wrapText(ln||' ',f,contentW-24));
+      items.push({lines:cLines, font:f, color:'#eaeaea', lineH:19, mt:10, mb:10, px:14, py:12, bg:'#1a1a1a', r:8});
+    } else if(b.kind==='check'){
+      const checkLines = c.split('\n');
+      checkLines.forEach(ln=>{
+        const done = /^\[x\]/i.test(ln.trim());
+        const tx   = (done?'☑ ':'☐ ') + ln.replace(/^\[[x ]\]\s*/i,'');
+        const f    = '15px system-ui,sans-serif';
+        items.push({lines:wrapText(tx,f,contentW), font:f, color:done?clrText2:clrText, lineH:22, mt:3, mb:1});
+      });
+    } else if(b.kind==='image'||b.kind==='drawing'){
+      items.push({type:'img', src:raw, mt:10, mb:10});
+    } else if(b.kind==='audio'){
+      items.push({type:'placeholder', label:'🎤 Audio', mt:8, mb:8});
+    } else if(c){
+      const f='15px system-ui,sans-serif';
+      items.push({lines:wrapText(c,f,contentW), font:f, color:clrText, lineH:23, mt:6, mb:2});
+    }
+  });
+
+  // Footer
+  items.push({lines:['YEStess · '+new Date().toLocaleDateString()], font:'11px system-ui,sans-serif', color:clrText2, lineH:18, mt:24, mb:0, borderTop:clrBorder});
+
+  // Pre-calculate heights & load images asynchronously
+  const imgItems = items.filter(it=>it.type==='img' && it.src);
+  let pending = imgItems.length;
+  function doRender(){
+    // Compute total height
+    let totalH = P;
+    items.forEach(it=>{
+      totalH += (it.mt||0);
+      if(it.type==='img')      totalH += (it._h||120) + 8;
+      else if(it.type==='placeholder') totalH += 36;
+      else totalH += (it.py||0)*2 + it.lines.length * it.lineH;
+      totalH += (it.mb||0);
+    });
+    totalH += P;
+
+    const dpr = Math.min(window.devicePixelRatio||2, 3);
+    const cv  = document.createElement('canvas');
+    cv.width  = W * dpr; cv.height = totalH * dpr;
     const ctx = cv.getContext('2d');
-    ctx.scale(2,2);
-    ctx.drawImage(img, 0, 0);
-    cv.toBlob(b=>{
+    ctx.scale(dpr, dpr);
+
+    // Background
+    ctx.fillStyle = clrBg;
+    ctx.fillRect(0, 0, W, totalH);
+
+    let y = P;
+    items.forEach(it=>{
+      y += (it.mt||0);
+
+      if(it.borderTop){
+        ctx.save(); ctx.strokeStyle=it.borderTop; ctx.lineWidth=1; ctx.globalAlpha=0.5;
+        ctx.beginPath(); ctx.moveTo(P, y); ctx.lineTo(W-P, y); ctx.stroke();
+        ctx.restore(); y += 10;
+      }
+
+      if(it.type==='img'){
+        if(it._img){
+          const iw=it._img.naturalWidth||W-P*2, ih=it._img.naturalHeight||120;
+          const scale=Math.min((W-P*2)/iw, 1);
+          const dw=iw*scale, dh=ih*scale;
+          ctx.save();
+          // rounded clip
+          ctx.beginPath(); ctx.roundRect(P, y, dw, dh, 8); ctx.clip();
+          ctx.drawImage(it._img, P, y, dw, dh);
+          ctx.restore();
+          y += dh + 8;
+        } else {
+          ctx.fillStyle=clrSurface; ctx.fillRect(P, y, W-P*2, 80);
+          ctx.fillStyle=clrText2; ctx.font='13px system-ui,sans-serif'; ctx.fillText('🖼', P+8, y+50);
+          y += 88;
+        }
+        y += (it.mb||0);
+        return;
+      }
+      if(it.type==='placeholder'){
+        ctx.fillStyle=clrSurface; ctx.fillRect(P, y, W-P*2, 30);
+        ctx.font='13px system-ui,sans-serif'; ctx.fillStyle=clrText2; ctx.fillText(it.label||'', P+10, y+21);
+        y += 36; y += (it.mb||0); return;
+      }
+
+      const px=it.px||0, py=it.py||0;
+      const blockH = py*2 + it.lines.length*it.lineH;
+
+      if(it.bg){
+        ctx.save(); ctx.fillStyle=it.bg;
+        if(it.r){ ctx.beginPath(); ctx.roundRect(P,y,contentW,blockH,it.r); ctx.fill(); }
+        else { ctx.fillRect(P,y,contentW,blockH); }
+        ctx.restore();
+      }
+      if(it.borderLeft){
+        ctx.save(); ctx.fillStyle=it.borderLeft; ctx.fillRect(P,y,3,blockH); ctx.restore();
+      }
+
+      ctx.font  = it.font;
+      ctx.fillStyle = it.color;
+      const tx = P + (it.pl||0) + px;
+      it.lines.forEach((ln,li)=>{
+        ctx.fillText(ln, tx, y + py + it.lineH*(li+1) - it.lineH*0.25);
+      });
+      y += blockH; y += (it.mb||0);
+    });
+
+    cv.toBlob(blob=>{
+      if(!blob){ toast(state.cfg.lang==='pl'?'Błąd generowania':'Export error'); return; }
       const a=document.createElement('a');
-      a.href=URL.createObjectURL(b);
-      a.download=`yestess-${(title||'note').replace(/[^a-z0-9]/gi,'_').toLowerCase()}.png`;
+      a.href=URL.createObjectURL(blob);
+      a.download=`yestess-${noteTitle.replace(/[^a-z0-9]/gi,'_').toLowerCase()||'note'}.png`;
       document.body.appendChild(a); a.click(); a.remove();
       URL.revokeObjectURL(a.href);
       toast(t('toast.pngReady'));
     }, 'image/png');
-    URL.revokeObjectURL(url);
-  };
-  img.onerror = ()=>{ URL.revokeObjectURL(url); toast(state.cfg.lang==='pl'?'Błąd generowania':'Error'); };
-  img.src = url;
+  }
+
+  if(pending===0){ doRender(); return; }
+  imgItems.forEach(it=>{
+    const img=new Image();
+    img.crossOrigin='anonymous';
+    img.onload=()=>{ it._img=img; it._h=img.naturalHeight*(Math.min((W-P*2)/img.naturalWidth,1)); if(--pending===0) doRender(); };
+    img.onerror=()=>{ it._img=null; if(--pending===0) doRender(); };
+    img.src=it.src;
+  });
 }
 
 function exportData(){
