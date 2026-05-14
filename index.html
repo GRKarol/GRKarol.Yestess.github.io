@@ -2189,6 +2189,14 @@ function renderProject(){
   c.appendChild(addSec);
 }
 
+function addTapHandler(el, fn){
+  let startY=0, moved=false;
+  el.addEventListener('touchstart',e=>{startY=e.touches[0].clientY;moved=false;},{passive:true});
+  el.addEventListener('touchmove',e=>{if(Math.abs(e.touches[0].clientY-startY)>8)moved=true;},{passive:true});
+  el.addEventListener('touchend',e=>{if(!moved){e.preventDefault();fn();}});
+  el.addEventListener('click',fn);
+}
+
 function makeNoteCard(n, origin){
   const wrap=document.createElement('div');
   wrap.className='note-card-wrap';
@@ -2207,7 +2215,7 @@ function makeNoteCard(n, origin){
   const words=(n.blocks||[]).reduce((s,b)=>s+wc(b.content||''),0);
   const reminderBadge = n.reminder && n.reminder.date ? `<div class="note-reminder-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>${fmtDate(n.reminder.date)}</div>` : '';
   card.innerHTML=`<div class="note-title">${esc(title)}</div>${preview?`<div class="note-preview">${esc(preview)}</div>`:`<div class="note-preview" style="font-style:italic;opacity:0.6">${esc(t('note.empty'))}</div>`}<div class="note-meta">${words} ${t('meta.words')} · ${fmtDate(n.updatedAt)}</div>${reminderBadge}`;
-  card.onclick=()=>openNote(n.id, origin==='project'?null:origin);
+  addTapHandler(card,()=>openNote(n.id, origin==='project'?null:origin));
 
   wrap.appendChild(handle);
   wrap.appendChild(card);
@@ -2468,7 +2476,7 @@ function renderInbox(){
     const preview=(n.blocks||[]).map(b=>plainText(b.content||'')).join(' ').slice(0,200);
     const pinMark = n.pinned ? '<span class="pin-mark">★</span> ' : '';
     card.innerHTML=`<div class="note-title">${pinMark}${esc(title)}</div>${preview?`<div class="note-preview">${esc(preview)}</div>`:`<div class="note-preview" style="font-style:italic;opacity:0.6">${esc(t('note.empty'))}</div>`}<div class="note-meta">${fmtDate(n.updatedAt)}</div>`;
-    card.onclick=()=>openNote(n.id, origin);
+    addTapHandler(card,()=>openNote(n.id, origin));
     c.appendChild(card);
   });
 }
