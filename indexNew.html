@@ -2288,9 +2288,10 @@ function makeNoteCard(n, origin){
   card.innerHTML=`<div class="note-title">${esc(title)}</div>${preview?`<div class="note-preview">${esc(preview)}</div>`:`<div class="note-preview" style="font-style:italic;opacity:0.6">${esc(t('note.empty'))}</div>`}<div class="note-meta">${words} ${t('meta.words')} · ${fmtDate(n.updatedAt)}</div>${reminderBadge}`;
 
   // Tap = open note; Long-press = context menu
-  let lpTimer=null, lpFired=false;
+  let lpTimer=null, lpFired=false, startY=0, scrolled=false;
   const startLP=(e)=>{
-    lpFired=false;
+    lpFired=false; scrolled=false;
+    startY=e.touches[0].clientY;
     wrap.classList.add('long-press-active');
     lpTimer=setTimeout(()=>{
       lpFired=true;
@@ -2305,8 +2306,8 @@ function makeNoteCard(n, origin){
     wrap.classList.remove('long-press-active');
   };
   card.addEventListener('touchstart', startLP, {passive:true});
-  card.addEventListener('touchend',   (e)=>{ cancelLP(e); if(!lpFired) openNote(n.id, origin==='project'?null:origin); });
-  card.addEventListener('touchmove',  cancelLP, {passive:true});
+  card.addEventListener('touchend',   (e)=>{ cancelLP(e); if(!lpFired && !scrolled) openNote(n.id, origin==='project'?null:origin); });
+  card.addEventListener('touchmove',  (e)=>{ if(Math.abs(e.touches[0].clientY-startY)>8) scrolled=true; cancelLP(e); }, {passive:true});
   card.addEventListener('touchcancel',cancelLP);
   card.addEventListener('click',      ()=>{ if(!lpFired) openNote(n.id, origin==='project'?null:origin); });
 
@@ -2565,7 +2566,11 @@ function renderInbox(){
     const preview=(n.blocks||[]).map(b=>plainText(b.content||'')).join(' ').slice(0,200);
     const pinMark = n.pinned ? '<span class="pin-mark">★</span> ' : '';
     card.innerHTML=`<div class="note-title">${pinMark}${esc(title)}</div>${preview?`<div class="note-preview">${esc(preview)}</div>`:`<div class="note-preview" style="font-style:italic;opacity:0.6">${esc(t('note.empty'))}</div>`}<div class="note-meta">${fmtDate(n.updatedAt)}</div>`;
-    card.onclick=()=>openNote(n.id, origin);
+    let _sy=0, _mv=false;
+    card.addEventListener('touchstart',e=>{_sy=e.touches[0].clientY;_mv=false;},{passive:true});
+    card.addEventListener('touchmove',e=>{if(Math.abs(e.touches[0].clientY-_sy)>8)_mv=true;},{passive:true});
+    card.addEventListener('touchend',e=>{if(!_mv){e.preventDefault();openNote(n.id,origin);}});
+    card.addEventListener('click',()=>openNote(n.id,origin));
     c.appendChild(card);
   });
 }
